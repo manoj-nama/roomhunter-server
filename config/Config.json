@@ -1,0 +1,98 @@
+{
+  "common": {
+    "server": {
+      "host": "localhost",
+      "port": "7002",
+      "allowCrossDomain": true
+    },
+    "database": {
+      "url": "mongodb://localhost:27017/roomHunt",
+      "poolSize": 5,
+      "tryToConnect": true
+    },
+    "cookie": {
+      "password": "secret",
+      "cookie": "hm-roomHunt",
+      "redirectTo": "/login",
+      "isSecure": false
+    },
+    "redis": {
+      "resource": "",
+      "host": "enter-your-redis-host-name",
+      "port": 17203,
+      "password": "******"
+    }
+  },
+  "development": {
+    "server": {
+      "host": "localhost",
+      "port": "7002",
+      "allowCrossDomain": true
+    },
+    "database": {
+      "url": "mongodb://localhost:27017/roomHunt",
+      "poolSize": 5,
+      "tryToConnect": true
+    },
+    "cookie": {
+      "password": "secret",
+      "cookie": "hm-roomHunt",
+      "redirectTo": "/login",
+      "isSecure": false
+    },
+    "redis": {
+      "resource": "",
+      "host": "enter-your-redis-host-name",
+      "port": 17203,
+      "password": "****"
+    }
+  },
+  "staging": {
+    "server": {
+      "host": "localhost",
+      "port": "7002",
+      "allowCrossDomain": true
+    },
+    "database": {
+      "url": "mongodb://localhost:27017/roomHunt",
+      "poolSize": 5,
+      "tryToConnect": true
+    },
+    "cookie": {
+      "password": "secret",
+      "cookie": "hm-roomHunt",
+      "redirectTo": "/login",
+      "isSecure": false
+    },
+    "redis": {
+      "resource": "",
+      "host": "enter-your-redis-host-name",
+      "port": 17203,
+      "password": "*****"
+    }
+  },
+  "testing": {
+    "server": {
+      "host": "localhost",
+      "port": "7002",
+      "allowCrossDomain": true
+    },
+    "database": {
+      "url": "mongodb://localhost:27017/roomHunt",
+      "poolSize": 5,
+      "tryToConnect": true
+    },
+    "cookie": {
+      "password": "secret",
+      "cookie": "hm-roomHunt",
+      "redirectTo": "/login",
+      "isSecure": false
+    },
+    "redis": {
+      "resource": "",
+      "host": "enter-your-redis-host-name",
+      "port": 17203,
+      "password": "your-password"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "es6-support",
+  "version": "0.0.1",
+  "main": "main",
+  "dependencies": {
+    "traceur": "0.0.79",
+    "path": "^0.4.9"
+  }
+}
