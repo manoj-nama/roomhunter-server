@@ -1,8 +1,7 @@
 "use strict";
 
 var Joi = require('joi'),
-    redis = require('../../custom_redis/main');
-
+    redis = require('../custom_modules/custom_redis');
 //Routs Lists
 //Refer: http://hapijs.com/tutorials/routing
 module.exports = [
