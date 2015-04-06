@@ -1,0 +1,8 @@
+{
+  "name": "mongoose-auto",
+  "version": "0.0.1",
+  "main": "main",
+  "dependencies": {
+    "mongoose": "^3.8.19"
+  }
+}

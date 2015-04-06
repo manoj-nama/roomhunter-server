@@ -1,0 +1,39 @@
+{
+  "name": "room-hunt-backend",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": {
+    "name": "TTN"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": ""
+    }
+  ],
+  "dependencies": {
+    "async": "^0.9.0",
+    "figures": "^1.3.5",
+    "hapi": "^7.5.2",
+    "hapi-auth-cookie": "^1.4.2",
+    "hapi-swagger": "^0.5.1",
+    "imagemin-log": "^2.0.0",
+    "joi": "^5.0.2",
+    "lodash": "^2.4.1",
+    "mkdirp": "^0.5.0",
+    "mongoose": "^3.8.19",
+    "path": "^0.4.9",
+    "redis": "^0.12.1",
+    "squeak": "^1.0.0",
+    "traceur": "0.0.79"
+  }
+}
