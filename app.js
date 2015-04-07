@@ -140,7 +140,7 @@ async.series(task, function (err, data) {
     } else {
         // Start the server
         server.start(function () {
-            log.cool('Server running on SERVER: ' + _config.server.host + ' PORT:' + process.env.PORT);
+            log.cool('Server running on : ' + _config.server.host + ' PORT:' + _config.server.port||process.env.PORT);
         });
     }
 });
