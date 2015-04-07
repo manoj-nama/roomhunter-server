@@ -23,7 +23,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "figures": "^1.3.5",
-    "hapi": "*",
+    "hapi": "8.4.0",
     "hapi-auth-cookie": "*",
     "hapi-swagger": "*",
     "imagemin-log": "^2.0.0",

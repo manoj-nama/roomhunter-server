@@ -67,17 +67,21 @@ task.push(function (callback) {
 
     plugin.push(function (cb) {
         if (plug.hapiPlugin.Swagger) {
-            server.pack.register({
-                plugin: hapiSwagger,
-                options: {
-                    apiVersion: pack.version,
-                    basePath: 'http://' + _config.server.host + ':' + _config.server.port,
-                    payloadType: 'json'
-                }
+            var swaggerOptions = {
+                basePath: 'http://localhost:7002'
+               };
+
+            server.register({
+                register: require('hapi-swagger'),
+                options: swaggerOptions
             }, function (err) {
-                var msg = 'Swagger interface loaded';
-                log.cool(msg);
-                cb(err, msg);
+                if (err) {
+                    var msg = 'Swagger interface loaded';
+                    log.cool(msg);
+                    cb(err, msg);
+                }else{
+                    cb(null, 'Swagger Plugin');
+                }
             });
         } else {
             cb(null, 'Skip Swagger Plugin');
@@ -87,7 +91,7 @@ task.push(function (callback) {
     plugin.push(function (callback) {
         var msg = 'Hapi Auth Cookie Enabled';
         if (plug.hapiPlugin.hapiAuthCookie) {
-            server.pack.register(require('hapi-auth-cookie'), function (err) {
+            server.register(require('hapi-auth-cookie'), function (err) {
                 server.auth.strategy('session', 'cookie', {
                     password: _config.cookie.password,
                     cookie: _config.cookie.cookie,
