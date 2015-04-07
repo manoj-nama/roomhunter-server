@@ -56,7 +56,8 @@ task.push(function (callback) {
 //Init Server
 task.push(function (callback) {
     // Create a server with a host and port
-    server = new Hapi.Server(process.env.PORT = process.env.PORT || _config.server.port, {cors: _config.server.allowCrossDomain});
+    server = new Hapi.Server();
+    server.connection({port: process.env.PORT || _config.server.port, routes:{cors: _config.server.allowCrossDomain}});
     callback(null, 'server variable setting up');
 });
 
