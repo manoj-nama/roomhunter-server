@@ -8,7 +8,6 @@ var Hapi = require('hapi'),
     mongooseAuto = require('./custom_modules/mongooseAuto'),
     async = require('async'),
     log = require('./custom_modules/custom-imagemin-log'),
-    pack = require('./package.json'),
     hapiSwagger = require('hapi-swagger'),
     es6Support = require('./custom_modules/es6Support'),
     task = [],
@@ -68,13 +67,12 @@ task.push(function (callback) {
 
     plugin.push(function (cb) {
         if (plug.hapiPlugin.Swagger) {
-            var swaggerOptions = {
-                basePath: 'http://localhost:7002'
-               };
 
             server.register({
-                register: require('hapi-swagger'),
-                options: swaggerOptions
+                register: hapiSwagger,
+                options: {
+                    basePath: 'http://'+_config.server.host+':'+_config.server.port
+                }
             }, function (err) {
                 if (err) {
                     var msg = 'Swagger interface loaded';
@@ -141,7 +139,7 @@ async.series(task, function (err, data) {
     } else {
         // Start the server
         server.start(function () {
-            log.cool('Server running on SERVER: ' + _config.server.host + ' PORT:' + process.env.PORT);
+            log.cool('Application running at: ' + _config.server.host + ' on PORT:' + _config.server.port);
         });
     }
 });
