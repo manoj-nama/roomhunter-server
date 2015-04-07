@@ -56,8 +56,7 @@ task.push(function (callback) {
 task.push(function (callback) {
     // Create a server with a host and port
     server = new Hapi.Server();
-    server.connection({ port: process.env.PORT || _config.server.port });
-    //server.connection({ cors:  _config.server.allowCrossDomain });
+    server.connection({port: process.env.PORT || _config.server.port, routes:{cors: _config.server.allowCrossDomain}});
     callback(null, 'server variable setting up');
 });
 
@@ -139,7 +138,7 @@ async.series(task, function (err, data) {
     } else {
         // Start the server
         server.start(function () {
-            log.cool('Application running at: ' + _config.server.host + ' on PORT:' + _config.server.port);
+            log.cool('Server running on : ' + _config.server.host + ' PORT:' + _config.server.port||process.env.PORT);
         });
     }
 });
