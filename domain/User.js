@@ -1,7 +1,6 @@
 "use strict";
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+var mongoose = require('mongoose')
 
 //Define User Schema
 //Refer: http://mongoosejs.com/docs/schematypes.html
@@ -20,6 +19,7 @@ module.exports = {
         country: String
     },
     personalDetails: {
+        age: { type: Number, min: 18, max: 120 },
         phone: Number,
         gender: String,
         profileImage: String
