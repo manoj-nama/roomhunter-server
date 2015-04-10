@@ -1,11 +1,10 @@
 "use strict";
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 
 //Define User Schema
 //Refer: http://mongoosejs.com/docs/schematypes.html
 module.exports = {
-    username: String,
     firstName: String,
     lastName: String,
     email: String,

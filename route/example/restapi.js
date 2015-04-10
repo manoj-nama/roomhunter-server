@@ -6,8 +6,8 @@ var UserService = require('../../services/UserService');
 //Routs Lists
 module.exports = [
     {
-        path: '/rest/example/test',
-        method: ['GET', 'POST', 'PUT', 'DELETE'],
+        path: '/rest/user/create',
+        method: 'POST',
         config: {
             description: 'REST API in one go',
             notes: 'Yes, I am doing some fun..',

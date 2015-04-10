@@ -13,10 +13,12 @@ var Hapi = require('hapi'),
     task = [],
     server = {},
     plug = require('./config/plug.json'),
-    bootstrap;
+    bootstrap,
+    Basic = require('hapi-auth-basic'),
+    Bcrypt = require('bcrypt');
 
 //Setting Up env
-task.push(function (callback) {
+task.push(function (callback){
     process.env.name = process.env.name || 'development';
     var msg = 'Server Running on ' + process.env.name + ' Environment';
     log.info(msg);
@@ -24,7 +26,7 @@ task.push(function (callback) {
 });
 
 //Custom Logger
-task.push(function (callback) {
+task.push(function (callback){
     global.log = log;
     var msg = 'Setting up Custom Logger';
     log.info(msg);
@@ -33,7 +35,7 @@ task.push(function (callback) {
 
 //Setting up global object
 //eg: _config, log
-task.push(function (callback) {
+task.push(function (callback){
     globalUtility.setGlobalConstant({_config: appConfig[process.env.name]});
     var msg = 'Setting up Global Configuration';
     log.info(msg);
@@ -41,43 +43,43 @@ task.push(function (callback) {
 });
 
 //Mongoose
-task.push(function (callback) {
+task.push(function (callback){
     mongooseAuto(_config.database, callback);
 });
 
 //Running Bootstrap Task
-task.push(function (callback) {
+task.push(function (callback){
     bootstrap = require('./config/Bootstrap');
     log.info('Booting up your application');
     bootstrap(process.env.name, callback);
 });
 
 //Init Server
-task.push(function (callback) {
+task.push(function (callback){
     // Create a server with a host and port
     server = new Hapi.Server();
-    server.connection({port: process.env.PORT || _config.server.port, routes:{cors: _config.server.allowCrossDomain}});
+    server.connection({port: process.env.PORT || _config.server.port, routes: {cors: _config.server.allowCrossDomain}});
     callback(null, 'server variable setting up');
 });
 
 //Add Plugin
-task.push(function (callback) {
+task.push(function (callback){
     var plugin = [];
 
-    plugin.push(function (cb) {
+    plugin.push(function (cb){
         if (plug.hapiPlugin.Swagger) {
 
             server.register({
                 register: hapiSwagger,
                 options: {
-                    basePath: 'http://'+_config.server.host+':'+_config.server.port
+                    basePath: 'http://' + _config.server.host + ':' + _config.server.port
                 }
-            }, function (err) {
+            }, function (err){
                 if (err) {
                     var msg = 'Swagger interface loaded';
                     log.cool(msg);
                     cb(err, msg);
-                }else{
+                } else {
                     cb(null, 'Swagger Plugin');
                 }
             });
@@ -86,36 +88,63 @@ task.push(function (callback) {
         }
     });
 
-    plugin.push(function (callback) {
-        var msg = 'Hapi Auth Cookie Enabled';
-        if (plug.hapiPlugin.hapiAuthCookie) {
-            server.register(require('hapi-auth-cookie'), function (err) {
-                server.auth.strategy('session', 'cookie', {
-                    password: _config.cookie.password,
-                    cookie: _config.cookie.cookie,
-                    redirectTo: _config.cookie.redirectTo,
-                    isSecure: _config.cookie.isSecure
-                });
-                callback(err, msg)
+    plugin.push(function (cb){
+        var validate = function (username, password, callback){
+            var user = users[username];
+            if (!user) {
+                return callback(null, false);
+            }
+
+            Bcrypt.compare(password, user.password, function (err, isValid){
+                callback(err, isValid, {id: user.id, name: user.name});
             });
-        } else {
-            msg = 'Hapi Auth Cookie Disable';
-            callback(null, msg);
-        }
+        };
+
+        server.register(Basic, function (err){
+            server.auth.strategy('simple', 'basic', {validateFunc: validate});
+            server.route({
+                method: 'GET',
+                path: '/',
+                config: {
+                    auth: 'simple',
+                    handler: function (request, reply){
+                        reply('hello, ' + request.auth.credentials.name);
+                    }
+                }
+            });
+        });
     });
 
-    async.parallel(plugin, function (err, rslt) {
+    /* plugin.push(function (callback) {
+     var msg = 'Hapi Auth Cookie Enabled';
+     if (plug.hapiPlugin.hapiAuthCookie) {
+     server.register(require('hapi-auth-cookie'), function (err) {
+     server.auth.strategy('session', 'cookie', {
+     password: _config.cookie.password,
+     cookie: _config.cookie.cookie,
+     redirectTo: _config.cookie.redirectTo,
+     isSecure: _config.cookie.isSecure
+     });
+     callback(err, msg)
+     });
+     } else {
+     msg = 'Hapi Auth Cookie Disable';
+     callback(null, msg);
+     }
+     });*/
+
+    async.parallel(plugin, function (err, rslt){
         callback(err, rslt);
     });
 });
 
 //Apply Routing Config
-task.push(function (callback) {
+task.push(function (callback){
 
-    function applyRouteConfig(dirPath) {
+    function applyRouteConfig(dirPath){
         var dirName = dirPath;
         var data = fs.readdirSync(dirName);
-        data.forEach(function (dta) {
+        data.forEach(function (dta){
             var path = dirName + '/' + dta;
             if (fs.lstatSync(path).isDirectory()) {
                 applyRouteConfig(path);
@@ -132,13 +161,13 @@ task.push(function (callback) {
 });
 
 //Run Server
-async.series(task, function (err, data) {
+async.series(task, function (err, data){
     if (err) {
         process.exit();
     } else {
         // Start the server
-        server.start(function () {
-            log.cool('Server running on : ' + _config.server.host + ' PORT:' + _config.server.port||process.env.PORT);
+        server.start(function (){
+            log.cool('Server running on : ' + _config.server.host + ' PORT:' + _config.server.port || process.env.PORT);
         });
     }
 });

@@ -1,6 +1,7 @@
 {
   "hapiPlugin": {
     "Swagger": true,
-    "hapiAuthCookie": true
+    "hapiAuthCookie": true,
+    "hapi-auth-basic" : true
   }
 }
