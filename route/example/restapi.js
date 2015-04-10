@@ -1,6 +1,7 @@
 "use strict";
 
 var Joi = require('joi');
+var UserService = require('../../services/UserService');
 
 //Routs Lists
 module.exports = [
@@ -11,9 +12,7 @@ module.exports = [
             description: 'REST API in one go',
             notes: 'Yes, I am doing some fun..',
             tags: ['api'],
-            handler: function (request, reply) {
-                reply({status: 'Testing my REST API'});
-            }
+            handler: UserService.create
         }
     }
 ];

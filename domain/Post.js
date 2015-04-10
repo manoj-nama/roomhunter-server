@@ -1,6 +1,6 @@
 "use strict";
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 
 //Define Post Schema
 //Refer: http://mongoosejs.com/docs/schematypes.html
