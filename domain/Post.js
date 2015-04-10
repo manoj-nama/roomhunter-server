@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 //Refer: http://mongoosejs.com/docs/schematypes.html
 module.exports = {
     title: String,
-    userId: {type: mongoose.Types.ObjectId},
+    userId: String,
     isActive: Boolean,
     timeStamp: Date,
     location: {
