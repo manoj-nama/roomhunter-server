@@ -16,6 +16,7 @@ var Hapi = require('hapi'),
     bootstrap,
     Basic = require('hapi-auth-basic'),
     Bcrypt = require('bcrypt');
+    //UserService=require('./services/UserService');
 
 //Setting Up env
 task.push(function (callback) {
@@ -62,6 +63,8 @@ task.push(function (callback) {
     callback(null, 'server variable setting up');
 });
 
+
+
 //Add Plugin
 task.push(function (callback) {
     var plugin = [];
@@ -91,17 +94,16 @@ task.push(function (callback) {
     plugin.push(function (cb) {
         if (plug.hapiPlugin['hapi-auth-basic']) {
             var msg = 'hapi-auth-basic Enabled';
+            var UserService=require('./services/UserService');
             server.register(Basic, function (err) {
                 server.auth.strategy('simple', 'basic', {
-                    validateFunc: function (username, password, callback) {
-                        var user = {
-                            name: 'Sandeep Chhapola',
-                            id: '2133d32a'
-                        }/*users[username]*/;
-                        if (username!=="sandy123") {
+                    validateFunc: function (email, password, callback) {
+                        var user = UserService.get(email);
+                        if (!user) {
                             return callback(null, false);
                         }else{
-                            callback(null, true, {id: user.id, name: user.name});
+                            console.log(user);
+                            callback(null, true, user);
                         }
 
                         /*Bcrypt.compare(password, user.password, function (err, isValid) {
