@@ -1,4 +1,5 @@
 var EventName = require('../src/enum/EventName');
+var mongoose = require('mongoose');
 
 
 module.exports.login = function (request) {
@@ -29,7 +30,7 @@ module.exports.create = function (user) {
                         emitter.emit(EventName.ERROR, err);
                     }
                     else {
-                        emitter.emit(EventName.DONE, user={
+                        emitter.emit(EventName.DONE, {
                             firstName: user.firstName,
                             lastName: user.lastName,
                             email: user.email
@@ -43,9 +44,9 @@ module.exports.create = function (user) {
 }.toEmitter();
 
 
-module.exports.get = function (email) {
+module.exports.get = function (id) {
     var emitter = this;
-    Modal.User.findOne({email: email}, function (err, user) {
+    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }

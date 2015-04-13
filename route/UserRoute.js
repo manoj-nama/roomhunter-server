@@ -30,13 +30,17 @@ module.exports = [
         config: {
             description: 'REST API in one go',
             tags: ['api'],
+            validate: {
+                payload: {
+                    email: Joi.string().required(),
+                    password : Joi.string().required(),
+                    firstName : Joi.string().optional(),
+                    lastName : Joi.string().optional(),
+                    mobile : Joi.number().optional()
+                }
+        },
             handler:  function (request, reply){
-                UserService.create({
-                    firstName: "Sandeep",
-                    lastName: "Chhapola",
-                    email: "schhapola0001@gmail.com",
-                    password: "sandy1234"
-                })
+                UserService.create(request.payload)
                     .on(EventName.ERROR, function(err) {
                         reply("Internal Error");
                     })
@@ -47,14 +51,19 @@ module.exports = [
         }
     },
     {
-        path: '/api/user/get',
+        path: '/api/user/get/{id}',
         method: 'GET',
         config: {
             description: 'REST API in one go',
             tags: ['api'],
-            auth: 'simple',
+            validate : {
+                params : {
+                    id : Joi.string().required()
+                }
+            },
+           /* auth: 'simple',*/
             handler:  function (request, reply){
-                UserService.create(request)
+                UserService.get(request.params.id)
                     .on(EventName.ERROR, function(err) {
                         reply("Internal Error");
                     })
