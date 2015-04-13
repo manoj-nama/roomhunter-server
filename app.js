@@ -107,12 +107,16 @@ task.push(function (callback) {
                             })
                             .on(EventName.DONE, function (user) {
                                 Bcrypt.compare(password, user.password, function (err, isValid) {
-                                    callback(err, isValid, {
-                                        _id:user._id,
-                                        email:user.email,
-                                        firstName:user.firstName,
-                                        lastName:user.lastName
-                                    });
+                                    if(err){
+                                        return callback(null, false);
+                                    }else{
+                                        callback(null, isValid, {
+                                            _id:user._id,
+                                            email:user.email,
+                                            firstName:user.firstName,
+                                            lastName:user.lastName
+                                        });
+                                    }
                                 });
                             });
                     }

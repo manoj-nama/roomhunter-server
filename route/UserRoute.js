@@ -81,14 +81,65 @@ module.exports = [
     },
     {
         path: '/api/user/logout',
-        method: 'POST',
+        method: 'GET',
         config: {
             description: 'REST API for logging out a user',
             tags: ['api'],
-            auth: 'simple',
             handler:  function (request, reply){
-               request.auth = null;
+                request.auth = null;
                 reply(true);
+            }
+        }
+    },
+    {
+        path: '/api/user/update/{id}',
+        method: 'PUT',
+        config: {
+            description: 'REST API to update an existing user',
+            tags: ['api'],
+            validate: {
+                payload: {
+                    email: Joi.string().optional(),
+                    firstName: Joi.string().optional(),
+                    lastName: Joi.string().optional(),
+                    mobile: Joi.number().optional()
+                },
+                params:{
+                    id: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                UserService.update(request.params.id, request.payload)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
+            }
+        }
+    },
+    {
+        path: '/api/user/delete/{id}',
+        method: "DELETE",
+        config: {
+            description: 'REST API to delete an existing user',
+            tags: ['api'],
+            validate: {
+                params:{
+                    id: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                UserService.delete(request.params.id)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
             }
         }
     }
