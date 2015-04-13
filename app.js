@@ -98,7 +98,7 @@ task.push(function (callback) {
             server.register(Basic, function (err) {
                 server.auth.strategy('simple', 'basic', {
                     validateFunc: function (email, password, callback) {
-                        var user = UserService.get(email);
+                        var user = UserService.getUserByEmail(email);
                         if (!user) {
                             return callback(null, false);
                         }else{
@@ -106,9 +106,9 @@ task.push(function (callback) {
                             callback(null, true, user);
                         }
 
-                        /*Bcrypt.compare(password, user.password, function (err, isValid) {
+                        Bcrypt.compare(password, user.password, function (err, isValid) {
                             callback(err, isValid, {id: user.id, name: user.name});
-                        });*/
+                        });
                     }
                 });
                 callback(err, msg)
