@@ -34,7 +34,7 @@ module.exports = [
         path: '/api/user/create',
         method: 'POST',
         config: {
-            description: 'REST API in one go',
+            description: 'REST API to create a new user',
             tags: ['api'],
             validate: {
                 payload: {
@@ -60,7 +60,7 @@ module.exports = [
         path: '/api/user/get/{id}',
         method: 'GET',
         config: {
-            description: 'REST API in one go',
+            description: 'REST API to get a user by given _id',
             tags: ['api'],
             validate: {
                 params: {
@@ -73,9 +73,22 @@ module.exports = [
                     .on(EventName.ERROR, function (err) {
                         reply("Internal Error");
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply('hello, ' + JSON.stringify(result));
+                    .on(EventName.DONE, function(result) {
+                        reply(JSON.stringify(result));
                     })
+            }
+        }
+    },
+    {
+        path: '/api/user/logout',
+        method: 'POST',
+        config: {
+            description: 'REST API for logging out a user',
+            tags: ['api'],
+            auth: 'simple',
+            handler:  function (request, reply){
+               request.auth = null;
+                reply(true);
             }
         }
     }
