@@ -15,8 +15,8 @@ var Hapi = require('hapi'),
     plug = require('./config/plug.json'),
     bootstrap,
     Basic = require('hapi-auth-basic'),
-    Bcrypt = require('bcrypt');
-    //UserService=require('./services/UserService');
+    Bcrypt = require('bcrypt'),
+    EventName = require('./src/enum/EventName');
 
 //Setting Up env
 task.push(function (callback) {
@@ -94,21 +94,27 @@ task.push(function (callback) {
     plugin.push(function (cb) {
         if (plug.hapiPlugin['hapi-auth-basic']) {
             var msg = 'hapi-auth-basic Enabled';
-            var UserService=require('./services/UserService');
+            var UserService = require('./services/UserService');
             server.register(Basic, function (err) {
                 server.auth.strategy('simple', 'basic', {
                     validateFunc: function (email, password, callback) {
-                        var user = UserService.getUserByEmail(email);
-                        if (!user) {
-                            return callback(null, false);
-                        }else{
-                            console.log(user);
-                            callback(null, true, user);
-                        }
-
-                        Bcrypt.compare(password, user.password, function (err, isValid) {
-                            callback(err, isValid, {id: user.id, name: user.name});
-                        });
+                        UserService.getUserByEmail(email)
+                            .on(EventName.ERROR, function (err) {
+                                return callback(null, false);
+                            })
+                            .on(EventName.NOT_FOUND, function () {
+                                return callback(null, false);
+                            })
+                            .on(EventName.DONE, function (user) {
+                                Bcrypt.compare(password, user.password, function (err, isValid) {
+                                    callback(err, isValid, {
+                                        _id:user._id,
+                                        email:user.email,
+                                        firstName:user.firstName,
+                                        lastName:user.lastName
+                                    });
+                                });
+                            });
                     }
                 });
                 callback(err, msg)

@@ -1,8 +1,8 @@
 "use strict";
 
 var Joi = require('joi');
-var UserService=require('../services/UserService');
-var EventName=require('../src/enum/EventName');
+var UserService = require('../services/UserService');
+var EventName = require('../src/enum/EventName');
 
 //Routs Lists
 module.exports = [
@@ -12,14 +12,20 @@ module.exports = [
         config: {
             description: 'REST API for authenticating user.',
             tags: ['api'],
+            validate: {
+                payload: {
+                    email: Joi.string().required(),
+                    password: Joi.string().required()
+                }
+            },
             auth: 'simple',
-            handler:  function (request, reply){
+            handler: function (request, reply) {
                 UserService.login(request)
-                    .on(EventName.ERROR, function(err) {
-                        reply("Internal Error");
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
                     })
-                    .on(EventName.DONE, function(result) {
-                        reply('hello, ' + JSON.stringify(result));
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
                     })
             }
         }
@@ -33,19 +39,19 @@ module.exports = [
             validate: {
                 payload: {
                     email: Joi.string().required(),
-                    password : Joi.string().required(),
-                    firstName : Joi.string().optional(),
-                    lastName : Joi.string().optional(),
-                    mobile : Joi.number().optional()
+                    password: Joi.string().required(),
+                    firstName: Joi.string().optional(),
+                    lastName: Joi.string().optional(),
+                    mobile: Joi.number().optional()
                 }
-        },
-            handler:  function (request, reply){
+            },
+            handler: function (request, reply) {
                 UserService.create(request.payload)
-                    .on(EventName.ERROR, function(err) {
-                        reply("Internal Error");
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
                     })
-                    .on(EventName.DONE, function(result) {
-                        reply('hello, ' + JSON.stringify(result));
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
                     })
             }
         }
@@ -56,18 +62,18 @@ module.exports = [
         config: {
             description: 'REST API in one go',
             tags: ['api'],
-            validate : {
-                params : {
-                    id : Joi.string().required()
+            validate: {
+                params: {
+                    id: Joi.string().required()
                 }
             },
-           /* auth: 'simple',*/
-            handler:  function (request, reply){
+             auth: 'simple',
+            handler: function (request, reply) {
                 UserService.get(request.params.id)
-                    .on(EventName.ERROR, function(err) {
+                    .on(EventName.ERROR, function (err) {
                         reply("Internal Error");
                     })
-                    .on(EventName.DONE, function(result) {
+                    .on(EventName.DONE, function (result) {
                         reply('hello, ' + JSON.stringify(result));
                     })
             }

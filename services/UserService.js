@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 module.exports.login = function (request) {
     var emitter = this;
     log.info(request.auth);
-    if (request.auth && request.auth.credentials.name) {
+    if (request.auth && request.auth.credentials.email) {
         emitter.emit(EventName.DONE, request.auth.credentials);
     } else {
         emitter.emit(EventName.ERROR, "ERROR");
