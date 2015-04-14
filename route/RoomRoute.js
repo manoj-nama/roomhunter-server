@@ -94,5 +94,28 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/room/delete/{id}',
+        method: "DELETE",
+        config: {
+            description: 'REST API to delete an existing room post',
+            tags: ['api'],
+            validate: {
+                params:{
+                    id: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                RoomService.delete(request.params.id)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
+            }
+        }
     }
 ];

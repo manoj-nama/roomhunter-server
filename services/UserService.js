@@ -105,9 +105,9 @@ module.exports.getUserByEmail = function (email) {
     });
 }.toEmitter();
 
-module.exports.delete = function (_id) {
+module.exports.delete = function (id) {
     var emitter = this;
-    Modal.User.findOne({_id: _id}).remove(function (err, result) {
+    Modal.User.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }

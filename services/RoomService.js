@@ -50,3 +50,19 @@ module.exports.update = function (_id, room) {
             }
         });
 }.toEmitter();
+
+
+module.exports.delete = function (id) {
+    var emitter = this;
+    Modal.Room.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
+        if (err) {
+            emitter.emit(EventName.ERROR, err);
+        }
+        else if (result) {
+            emitter.emit(EventName.DONE, true);
+        }
+        else {
+            emitter.emit(EventName.NOT_FOUND, null);
+        }
+    });
+}.toEmitter();
