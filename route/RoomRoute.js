@@ -60,5 +60,39 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/room/update/{id}',
+        method: 'PUT',
+        config: {
+            description: 'REST API to update an existing room',
+            tags: ['api'],
+            validate: {
+                payload: {
+                    userId: Joi.string().required(),
+                    title: Joi.string().required(),
+                    price: Joi.string().required(),
+                    propertyType: Joi.string().required(),
+                    isFurnished: Joi.string().required(),
+                    location_seoFriendlyUrl: Joi.string().required(),
+                    description: Joi.string().optional(),
+                    location_name: Joi.string().optional(),
+                    images: Joi.string().optional()
+                },
+                params:{
+                    id: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                RoomService.update(request.params.id, request.payload)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Error", err);
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
+            }
+        }
     }
 ];

@@ -29,3 +29,24 @@ module.exports.get = function (id) {
         }
     });
 }.toEmitter();
+
+module.exports.update = function (_id, room) {
+    var emitter = this;
+    Modal.Room.findOne({_id: _id},
+        function (err, result) {
+            if (err) {
+                log.error("ERROR: ", err);
+                emitter.emit(EventName.ERROR, err);
+            }
+            else if (result) {
+                Modal.Room.update({_id: mongoose.Types.ObjectId(_id)}, {$set: room }, {}, function (err, result) {
+                    if (err) {
+                        emitter.emit(EventName.ERROR, err);
+                    }
+                    else {
+                        emitter.emit(EventName.DONE, true);
+                    }
+                });
+            }
+        });
+}.toEmitter();
