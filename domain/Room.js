@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-//Define Post Schema
+//Define Room Schema
 //Refer: http://mongoosejs.com/docs/schematypes.html
 module.exports = {
     title: String,
