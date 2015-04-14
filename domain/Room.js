@@ -11,8 +11,6 @@ module.exports = {
     timeStamp: Date,
     location: {
         name: String,
-        Address1: String,
-        Address2: String,
         city: String,
         country: String,
         code: String,
@@ -23,7 +21,6 @@ module.exports = {
     description: String,
     price: Number,
     propertyType: String,
-    roommate_preference: String,
     isFurnished: Boolean,
     images:[]
 };
