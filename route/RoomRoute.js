@@ -21,7 +21,7 @@ module.exports = [
                     price: Joi.string().required(),
                     propertyType: Joi.string().required(),
                     isFurnished: Joi.string().required(),
-                    seoFriendlyUrl: Joi.string().required(),
+                    location_seoFriendlyUrl: Joi.string().required(),
                     description: Joi.string().optional(),
                     location_name: Joi.string().optional(),
                     images: Joi.string().optional()
@@ -33,6 +33,29 @@ module.exports = [
                         reply("Error", err);
                     })
                     .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
+            }
+        }
+    },
+    {
+        path: '/api/room/get/{id}',
+        method: 'GET',
+        config: {
+            description: 'REST API to get a room by given _id',
+            tags: ['api'],
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                RoomService.get(request.params.id)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Internal Error");
+                    })
+                    .on(EventName.DONE, function(result) {
                         reply(JSON.stringify(result));
                     })
             }
