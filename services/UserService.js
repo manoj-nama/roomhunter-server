@@ -1,6 +1,8 @@
 var EventName = require('../src/enum/EventName');
 var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
+var mail = require("../custom_modules/mailer");
+var utils = require('../src/Utils');
 
 
 module.exports.login = function (request) {
@@ -37,6 +39,8 @@ module.exports.create = function (user) {
                                 emitter.emit(EventName.ERROR, err);
                             }
                             else {
+                                var link = getLink(result._id);
+                                mail.send(result.email, "Verify your RoomHunt account", "emailVerification", {email : result.email,link : link});
                                 emitter.emit(EventName.DONE, {
                                     firstName: user.firstName,
                                     lastName: user.lastName,
@@ -119,3 +123,10 @@ module.exports.delete = function (id) {
         }
     });
 }.toEmitter();
+
+function getLink(userId) {
+    var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
+    var link = _config.server.serverUrl + "/verify/" + encryptedData;
+    console.log(link);
+    return link;
+}

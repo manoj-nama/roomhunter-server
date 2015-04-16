@@ -17,9 +17,10 @@ var Hapi = require('hapi'),
     Basic = require('hapi-auth-basic'),
     Bcrypt = require('bcrypt'),
     EventName = require('./src/enum/EventName');
+global.__appBaseDir = __dirname;
 
 //Setting Up env
-task.push(function (callback) {
+task.push(function (callback){
     process.env.name = process.env.name || 'development';
     var msg = 'Server Running on ' + process.env.name + ' Environment';
     log.info(msg);
@@ -27,7 +28,7 @@ task.push(function (callback) {
 });
 
 //Custom Logger
-task.push(function (callback) {
+task.push(function (callback){
     global.log = log;
     var msg = 'Setting up Custom Logger';
     log.info(msg);
@@ -36,7 +37,7 @@ task.push(function (callback) {
 
 //Setting up global object
 //eg: _config, log
-task.push(function (callback) {
+task.push(function (callback){
     globalUtility.setGlobalConstant({_config: appConfig[process.env.name]});
     var msg = 'Setting up Global Configuration';
     log.info(msg);
@@ -44,19 +45,19 @@ task.push(function (callback) {
 });
 
 //Mongoose
-task.push(function (callback) {
+task.push(function (callback){
     mongooseAuto(_config.database, callback);
 });
 
 //Running Bootstrap Task
-task.push(function (callback) {
+task.push(function (callback){
     bootstrap = require('./config/Bootstrap');
     log.info('Booting up your application');
     bootstrap(process.env.name, callback);
 });
 
 //Init Server
-task.push(function (callback) {
+task.push(function (callback){
     // Create a server with a host and port
     server = new Hapi.Server();
     server.connection({port: process.env.PORT || _config.server.port, routes: {cors: _config.server.allowCrossDomain}});
@@ -64,12 +65,11 @@ task.push(function (callback) {
 });
 
 
-
 //Add Plugin
-task.push(function (callback) {
+task.push(function (callback){
     var plugin = [];
 
-    plugin.push(function (cb) {
+    plugin.push(function (cb){
         if (plug.hapiPlugin.Swagger) {
 
             server.register({
@@ -77,7 +77,7 @@ task.push(function (callback) {
                 options: {
                     basePath: 'http://' + _config.server.host + ':' + _config.server.port
                 }
-            }, function (err) {
+            }, function (err){
                 if (err) {
                     var msg = 'Swagger interface loaded';
                     log.cool(msg);
@@ -91,30 +91,30 @@ task.push(function (callback) {
         }
     });
 
-    plugin.push(function (cb) {
+    plugin.push(function (cb){
         if (plug.hapiPlugin['hapi-auth-basic']) {
             var msg = 'hapi-auth-basic Enabled';
             var UserService = require('./services/UserService');
-            server.register(Basic, function (err) {
+            server.register(Basic, function (err){
                 server.auth.strategy('simple', 'basic', {
-                    validateFunc: function (email, password, callback) {
+                    validateFunc: function (email, password, callback){
                         UserService.getUserByEmail(email)
-                            .on(EventName.ERROR, function (err) {
+                            .on(EventName.ERROR, function (err){
                                 return callback(null, false);
                             })
-                            .on(EventName.NOT_FOUND, function () {
+                            .on(EventName.NOT_FOUND, function (){
                                 return callback(null, false);
                             })
-                            .on(EventName.DONE, function (user) {
-                                Bcrypt.compare(password, user.password, function (err, isValid) {
-                                    if(err){
+                            .on(EventName.DONE, function (user){
+                                Bcrypt.compare(password, user.password, function (err, isValid){
+                                    if (err) {
                                         return callback(null, false);
-                                    }else{
+                                    } else {
                                         callback(null, isValid, {
-                                            _id:user._id,
-                                            email:user.email,
-                                            firstName:user.firstName,
-                                            lastName:user.lastName
+                                            _id: user._id,
+                                            email: user.email,
+                                            firstName: user.firstName,
+                                            lastName: user.lastName
                                         });
                                     }
                                 });
@@ -147,18 +147,18 @@ task.push(function (callback) {
      }
      });*/
 
-    async.parallel(plugin, function (err, rslt) {
+    async.parallel(plugin, function (err, rslt){
         callback(err, rslt);
     });
 });
 
 //Apply Routing Config
-task.push(function (callback) {
+task.push(function (callback){
 
-    function applyRouteConfig(dirPath) {
+    function applyRouteConfig(dirPath){
         var dirName = dirPath;
         var data = fs.readdirSync(dirName);
-        data.forEach(function (dta) {
+        data.forEach(function (dta){
             var path = dirName + '/' + dta;
             if (fs.lstatSync(path).isDirectory()) {
                 applyRouteConfig(path);
@@ -175,12 +175,12 @@ task.push(function (callback) {
 });
 
 //Run Server
-async.series(task, function (err, data) {
+async.series(task, function (err, data){
     if (err) {
         process.exit();
     } else {
         // Start the server
-        server.start(function () {
+        server.start(function (){
             log.cool('Server running on : ' + _config.server.host + ' PORT:' + _config.server.port || process.env.PORT);
         });
     }
