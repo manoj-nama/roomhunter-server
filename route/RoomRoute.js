@@ -1,4 +1,3 @@
-
 "use strict";
 
 var Joi = require('joi');
@@ -27,13 +26,13 @@ module.exports = [
                     images: Joi.string().optional()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.create(request.payload)
-                    .on(EventName.ERROR, function (err) {
-                        reply("Error", err);
+                    .on(EventName.ERROR, function (err){
+                        reply({code: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply(JSON.stringify(result));
+                    .on(EventName.DONE, function (result){
+                        reply({code: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -50,13 +49,13 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.get(request.params.id)
-                    .on(EventName.ERROR, function (err) {
-                        reply("Internal Error");
+                    .on(EventName.ERROR, function (err){
+                        reply({code: 500, error: err});
                     })
-                    .on(EventName.DONE, function(result) {
-                        reply(JSON.stringify(result));
+                    .on(EventName.DONE, function (result){
+                        reply({code: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -79,18 +78,18 @@ module.exports = [
                     location_name: Joi.string().optional(),
                     images: Joi.string().optional()
                 },
-                params:{
+                params: {
                     id: Joi.string().required()
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.update(request.params.id, request.payload)
-                    .on(EventName.ERROR, function (err) {
-                        reply("Error", err);
+                    .on(EventName.ERROR, function (err){
+                        reply({code: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply(JSON.stringify(result));
+                    .on(EventName.DONE, function (result){
+                        reply({code: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -102,18 +101,21 @@ module.exports = [
             description: 'REST API to delete an existing room post',
             tags: ['api'],
             validate: {
-                params:{
+                params: {
                     id: Joi.string().required()
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.delete(request.params.id)
-                    .on(EventName.ERROR, function (err) {
-                        reply("Error", err);
+                    .on(EventName.ERROR, function (err){
+                        reply({code: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply(JSON.stringify(result));
+                    .on(EventName.DONE, function (result){
+                        reply({code: 200, data: JSON.stringify(result)});
+                    })
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({code: 404, data: null});
                     })
             }
         }
