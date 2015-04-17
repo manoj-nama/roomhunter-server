@@ -25,5 +25,6 @@ module.exports = {
     },
     posts: [],
     isActive: Boolean,
+    verified: Boolean,
     timestamp: {type: Number, default: +new Date()}
 };
