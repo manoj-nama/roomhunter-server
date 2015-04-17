@@ -2,6 +2,7 @@
 
 var Joi = require('joi');
 var UserService = require('../services/UserService');
+var RoomService = require('../services/RoomService');
 var EventName = require('../src/enum/EventName');
 
 //Routs Lists
@@ -138,6 +139,29 @@ module.exports = [
                         reply("Error", err);
                     })
                     .on(EventName.DONE, function (result) {
+                        reply(JSON.stringify(result));
+                    })
+            }
+        }
+    },
+    {
+        path: '/api/user/rooms/{userId}',
+        method: 'GET',
+        config: {
+            description: "REST API to get rooms posted by a user",
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply) {
+                RoomService.getRoomsByUserId(request.params.userId)
+                    .on(EventName.ERROR, function (err) {
+                        reply("Internal Error");
+                    })
+                    .on(EventName.DONE, function(result) {
                         reply(JSON.stringify(result));
                     })
             }

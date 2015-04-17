@@ -66,3 +66,18 @@ module.exports.delete = function (id) {
         }
     });
 }.toEmitter();
+
+module.exports.getRoomsByUserId = function (userId) {
+    var emitter = this;
+    Modal.Room.find({userId: userId}, function (err, rooms) {
+        if (err) {
+            emitter.emit(EventName.ERROR, err);
+        }
+        else if (user) {
+            emitter.emit(EventName.DONE, rooms);
+        }
+        else {
+            emitter.emit(EventName.NOT_FOUND, []);
+        }
+    });
+}.toEmitter();
