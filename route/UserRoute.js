@@ -20,12 +20,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.login(request)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply("Error", err);
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply(JSON.stringify(result));
                     })
             }
@@ -46,13 +46,16 @@ module.exports = [
                     mobile: Joi.number().optional()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.create(request.payload)
-                    .on(EventName.ERROR, function (err) {
-                        reply("Error", err);
+                    .on(EventName.ERROR, function (err){
+                        reply({code : 500, error:err});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply(JSON.stringify(result));
+                    .on(EventName.DONE, function (result){
+                        reply({code : 200, data:JSON.stringify(result)});
+                    })
+                    .on(EventName.ALREADY_EXIST, function (result){
+                        reply({code : 204, data:null});
                     })
             }
         }
@@ -68,13 +71,13 @@ module.exports = [
                     id: Joi.string().required()
                 }
             },
-             auth: 'simple',
-            handler: function (request, reply) {
+            auth: 'simple',
+            handler: function (request, reply){
                 UserService.get(request.params.id)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply("Internal Error");
                     })
-                    .on(EventName.DONE, function(result) {
+                    .on(EventName.DONE, function (result){
                         reply(JSON.stringify(result));
                     })
             }
@@ -86,7 +89,7 @@ module.exports = [
         config: {
             description: 'REST API for logging out a user',
             tags: ['api'],
-            handler:  function (request, reply){
+            handler: function (request, reply){
                 request.auth = null;
                 reply(true);
             }
@@ -105,17 +108,17 @@ module.exports = [
                     lastName: Joi.string().optional(),
                     mobile: Joi.number().optional()
                 },
-                params:{
+                params: {
                     id: Joi.string().required()
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.update(request.params.id, request.payload)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply("Error", err);
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply(JSON.stringify(result));
                     })
             }
@@ -128,17 +131,17 @@ module.exports = [
             description: 'REST API to delete an existing user',
             tags: ['api'],
             validate: {
-                params:{
+                params: {
                     id: Joi.string().required()
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.delete(request.params.id)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply("Error", err);
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply(JSON.stringify(result));
                     })
             }
@@ -156,12 +159,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.getRoomsByUserId(request.params.userId)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply("Internal Error");
                     })
-                    .on(EventName.DONE, function(result) {
+                    .on(EventName.DONE, function (result){
                         reply(JSON.stringify(result));
                     })
             }

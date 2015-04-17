@@ -27,5 +27,8 @@ module.exports = {
     NOT_FOUND: "NOT_FOUND",
 
     //When the user does not have rights on that data
-    UNAUTHORIZED: "UNAUTHORIZED"
+    UNAUTHORIZED: "UNAUTHORIZED",
+
+    //When the identity trying to save already exist
+    ALREADY_EXIST: "ALREADY_EXIST"
 };

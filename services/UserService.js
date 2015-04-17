@@ -25,7 +25,7 @@ module.exports.create = function (user) {
                 emitter.emit(EventName.ERROR, err);
             }
             else if (result) {
-                emitter.emit(EventName.DONE, user);
+                emitter.emit(EventName.ALREADY_EXIST, {});
             }
             else {
                 bcrypt.hash(user.password, 10, function (err, hash) {
