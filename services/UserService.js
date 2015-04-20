@@ -3,18 +3,24 @@ var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 var mail = require("../custom_modules/mailer");
 var utils = require('../src/Utils');
-
+var jwt = require('jsonwebtoken');
 
 module.exports.login = function (userCredential) {
     var emitter = this;
     Modal.User.findOne({
             'email': userCredential.email
         }, function (err, userObj) {
-            if (userObj) {
-                bcrypt.compare(userCredential.password, userObj.password, function (err, res) {
-                    if (res == true) {
-                        userObj.password = null;
-                        emitter.emit(EventName.DONE, userObj);
+            if (userObj.email) {
+                var token = jwt.sign({password: userObj.password, email: userObj.email}, 'shalalaldkdkd');
+                Modal.User.update({'email': userObj.email}, {$set: {loginToken: token}}, function (err, tokenUpdated) {
+                    if (err) {
+                        emitter.emit(EventName.ERROR, "ERROR");
+                    } else if (tokenUpdated) {
+                        emitter.emit(EventName.DONE, {
+                            firstName: userObj.firstName,
+                            lastName: userObj.lastName,
+                            email: userObj.email
+                        });
                     } else {
                         emitter.emit(EventName.ERROR, "ERROR");
                     }
@@ -163,7 +169,6 @@ module.exports.verifyUser = function (code) {
 function getVerificationLink(userId) {
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
     var link = _config.server.serverUrl + "/api/user/verify/" + encryptedData;
-    console.log(link);
     return link;
 }
 
