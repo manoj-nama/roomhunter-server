@@ -19,9 +19,8 @@ module.exports = [
                     password: Joi.string().required()
                 }
             },
-            auth: 'simple',
             handler: function (request, reply){
-                UserService.login(request)
+                UserService.login(request.payload)
                     .on(EventName.ERROR, function (err){
                         reply({code : 500, error:err});
                     })
