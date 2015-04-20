@@ -5,21 +5,32 @@ var mail = require("../custom_modules/mailer");
 var utils = require('../src/Utils');
 
 
-module.exports.login = function (request){
+module.exports.login = function (userCredential) {
     var emitter = this;
-    log.info(request.auth);
-    if (request.auth && request.auth.credentials.email) {
-        emitter.emit(EventName.DONE, request.auth.credentials);
-    } else {
-        emitter.emit(EventName.ERROR, "ERROR");
-    }
+    Modal.User.findOne({
+            'email': userCredential.email
+        }, function (err, userObj) {
+            if (userObj) {
+                bcrypt.compare(userCredential.password, userObj.password, function (err, res) {
+                    if (res == true) {
+                        userObj.password = null;
+                        emitter.emit(EventName.DONE, userObj);
+                    } else {
+                        emitter.emit(EventName.ERROR, "ERROR");
+                    }
+                });
+            } else {
+                emitter.emit(EventName.ERROR, "ERROR");
+            }
+        }
+    );
 }.toEmitter();
 
 
-module.exports.create = function (user){
+module.exports.create = function (user) {
     var emitter = this;
     Modal.User.findOne({email: user.email},
-        function (err, result){
+        function (err, result) {
             if (err) {
                 log.error("ERROR: ", err);
                 emitter.emit(EventName.ERROR, err);
@@ -28,13 +39,13 @@ module.exports.create = function (user){
                 emitter.emit(EventName.ALREADY_EXIST, {});
             }
             else {
-                bcrypt.hash(user.password, 10, function (err, hash){
+                bcrypt.hash(user.password, 10, function (err, hash) {
                     if (err) {
                         emitter.emit(EventName.ERROR, err);
                     }
                     else {
                         user.password = hash;
-                        new Modal.User(user).save(function (err, result){
+                        new Modal.User(user).save(function (err, result) {
                             if (err) {
                                 emitter.emit(EventName.ERROR, err);
                             }
@@ -59,16 +70,16 @@ module.exports.create = function (user){
 
 }.toEmitter();
 
-module.exports.update = function (_id, user){
+module.exports.update = function (_id, user) {
     var emitter = this;
     Modal.User.findOne({_id: _id},
-        function (err, result){
+        function (err, result) {
             if (err) {
                 log.error("ERROR: ", err);
                 emitter.emit(EventName.ERROR, err);
             }
             else if (result) {
-                Modal.User.update({_id: mongoose.Types.ObjectId(_id)}, {$set: user}, {}, function (err, result){
+                Modal.User.update({_id: mongoose.Types.ObjectId(_id)}, {$set: user}, {}, function (err, result) {
                     if (err) {
                         emitter.emit(EventName.ERROR, err);
                     }
@@ -81,9 +92,9 @@ module.exports.update = function (_id, user){
 }.toEmitter();
 
 
-module.exports.get = function (id){
+module.exports.get = function (id) {
     var emitter = this;
-    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user){
+    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -97,9 +108,9 @@ module.exports.get = function (id){
 }.toEmitter();
 
 
-module.exports.getUserByEmail = function (email){
+module.exports.getUserByEmail = function (email) {
     var emitter = this;
-    Modal.User.findOne({email: email}, function (err, user){
+    Modal.User.findOne({email: email}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -112,9 +123,9 @@ module.exports.getUserByEmail = function (email){
     });
 }.toEmitter();
 
-module.exports.delete = function (id){
+module.exports.delete = function (id) {
     var emitter = this;
-    Modal.User.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result){
+    Modal.User.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -128,13 +139,11 @@ module.exports.delete = function (id){
 }.toEmitter();
 
 
-module.exports.verifyUser = function (code){
+module.exports.verifyUser = function (code) {
     var emitter = this;
     var decryptedData = utils.decrypt(code);
-    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^");
-    console.log(decryptedData);
     if (decryptedData.userId) {
-        Modal.User.findOneAndUpdate({_id: mongoose.Types.ObjectId(decryptedData.userId)}, {$set: {verified: true}}, {new: true}, function (err, user){
+        Modal.User.findOneAndUpdate({_id: mongoose.Types.ObjectId(decryptedData.userId)}, {$set: {verified: true}}, {new: true}, function (err, user) {
             if (err) {
                 emitter.emit(EventName.ERROR, err);
             }
@@ -151,7 +160,7 @@ module.exports.verifyUser = function (code){
 }.toEmitter();
 
 
-function getVerificationLink(userId){
+function getVerificationLink(userId) {
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
     var link = _config.server.serverUrl + "/api/user/verify/" + encryptedData;
     console.log(link);
