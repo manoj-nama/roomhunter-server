@@ -18,7 +18,7 @@ module.exports = {
         country: String
     },
     personalDetails: {
-        age: { type: Number, min: 18, max: 120 },
+        age: {type: Number, min: 18, max: 120},
         phone: Number,
         gender: String,
         profileImage: String
@@ -26,5 +26,6 @@ module.exports = {
     posts: [],
     isActive: Boolean,
     verified: Boolean,
-    timestamp: {type: Number, default: +new Date()}
+    timestamp: {type: Number, default: +new Date()},
+    loginToken: {type: String}
 };
