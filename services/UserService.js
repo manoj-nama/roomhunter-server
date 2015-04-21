@@ -168,7 +168,7 @@ module.exports.verifyUser = function (code) {
 
 function getVerificationLink(userId) {
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
-    var link = _config.server.serverUrl + "/api/user/verify/" + encryptedData;
+    var link = _config.server.clientUrl + "/verify/" + encryptedData;
     return link;
 }
 
