@@ -131,7 +131,7 @@ module.exports = [
                     location: Joi.string().required()
                 }
             },
-            //auth: 'simple',
+            auth: 'simple',
             handler: function (request, reply){
                 RoomService.getRoomsByCriteria(request.params.location, request.query)
                     .on(EventName.ERROR, function (err){
