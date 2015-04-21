@@ -7,12 +7,12 @@ var jwt = require('jsonwebtoken');
 
 module.exports.login = function (userCredential) {
     var emitter = this;
-    Modal.User.findOne({
+    Model.User.findOne({
             'email': userCredential.email
         }, function (err, userObj) {
             if (userObj.email) {
                 var token = jwt.sign({password: userObj.password, email: userObj.email}, 'shalalaldkdkd');
-                Modal.User.update({'email': userObj.email}, {$set: {loginToken: token}}, function (err, tokenUpdated) {
+                Model.User.update({'email': userObj.email}, {$set: {loginToken: token}}, function (err, tokenUpdated) {
                     if (err) {
                         emitter.emit(EventName.ERROR, "ERROR");
                     } else if (tokenUpdated) {
@@ -35,7 +35,7 @@ module.exports.login = function (userCredential) {
 
 module.exports.create = function (user) {
     var emitter = this;
-    Modal.User.findOne({email: user.email},
+    Model.User.findOne({email: user.email},
         function (err, result) {
             if (err) {
                 log.error("ERROR: ", err);
@@ -51,7 +51,7 @@ module.exports.create = function (user) {
                     }
                     else {
                         user.password = hash;
-                        new Modal.User(user).save(function (err, result) {
+                        new Model.User(user).save(function (err, result) {
                             if (err) {
                                 emitter.emit(EventName.ERROR, err);
                             }
@@ -78,14 +78,14 @@ module.exports.create = function (user) {
 
 module.exports.update = function (_id, user) {
     var emitter = this;
-    Modal.User.findOne({_id: _id},
+    Model.User.findOne({_id: _id},
         function (err, result) {
             if (err) {
                 log.error("ERROR: ", err);
                 emitter.emit(EventName.ERROR, err);
             }
             else if (result) {
-                Modal.User.update({_id: mongoose.Types.ObjectId(_id)}, {$set: user}, {}, function (err, result) {
+                Model.User.update({_id: mongoose.Types.ObjectId(_id)}, {$set: user}, {}, function (err, result) {
                     if (err) {
                         emitter.emit(EventName.ERROR, err);
                     }
@@ -100,7 +100,7 @@ module.exports.update = function (_id, user) {
 
 module.exports.get = function (id) {
     var emitter = this;
-    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
+    Model.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -116,7 +116,7 @@ module.exports.get = function (id) {
 
 module.exports.getUserByEmail = function (email) {
     var emitter = this;
-    Modal.User.findOne({email: email}, function (err, user) {
+    Model.User.findOne({email: email}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -131,7 +131,7 @@ module.exports.getUserByEmail = function (email) {
 
 module.exports.delete = function (id) {
     var emitter = this;
-    Modal.User.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
+    Model.User.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -149,7 +149,7 @@ module.exports.verifyUser = function (code) {
     var emitter = this;
     var decryptedData = utils.decrypt(code);
     if (decryptedData.userId) {
-        Modal.User.findOneAndUpdate({_id: mongoose.Types.ObjectId(decryptedData.userId)}, {$set: {verified: true}}, {new: true}, function (err, user) {
+        Model.User.findOneAndUpdate({_id: mongoose.Types.ObjectId(decryptedData.userId)}, {$set: {verified: true}}, {new: true}, function (err, user) {
             if (err) {
                 emitter.emit(EventName.ERROR, err);
             }

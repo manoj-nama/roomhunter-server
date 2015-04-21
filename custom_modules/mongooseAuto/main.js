@@ -36,7 +36,7 @@ module.exports = function MongooseDB(database, callback) {
         if (error) {
             throw new error;
         } else {
-            global.Modal = model;
+            global.Model = model;
         }
     });
 

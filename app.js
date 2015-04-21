@@ -102,7 +102,7 @@ task.push(function (callback) {
                     accessTokenName: 'access_token',    // optional, 'access_token' by default
                     validateFunc: function (token, callback) {
                         var request = this;
-                        Modal.User.findOne({loginToken: token}, function (err, result) {
+                        Model.User.findOne({loginToken: token}, function (err, result) {
                             if (result) {
                                 callback(null, true, {token: token})
                             } else {

@@ -119,5 +119,31 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/room/search/{location}',
+        method: 'GET',
+        config: {
+            description: 'REST API to get rooms by certain criteria',
+            tags: ['api'],
+            validate: {
+                params: {
+                    location: Joi.string().required()
+                }
+            },
+            //auth: 'simple',
+            handler: function (request, reply){
+                RoomService.getRoomsByCriteria(request.params.location, request.query)
+                    .on(EventName.ERROR, function (err){
+                        reply({code: 500, error: err});
+                    })
+                    .on(EventName.DONE, function (result){
+                        reply({code: 200, data: JSON.stringify(result)});
+                    })
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({code: 404, data: []});
+                    })
+            }
+        }
     }
 ];
