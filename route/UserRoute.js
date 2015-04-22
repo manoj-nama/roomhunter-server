@@ -208,7 +208,7 @@ module.exports = [
                 payload: {
                     to: Joi.string().required(),
                     from: Joi.string().required(),
-                    message: Joi.string().optional()
+                    message: Joi.string().required()
                 }
             },
             handler: function (request, reply){
