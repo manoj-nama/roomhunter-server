@@ -29,10 +29,10 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.create(request.payload)
                     .on(EventName.ERROR, function (err){
-                        reply({code: 500, error: err});
+                        reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -52,10 +52,10 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.get(request.params.id)
                     .on(EventName.ERROR, function (err){
-                        reply({code: 500, error: err});
+                        reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -86,10 +86,10 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.update(request.params.id, request.payload)
                     .on(EventName.ERROR, function (err){
-                        reply({code: 500, error: err});
+                        reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -109,13 +109,13 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.delete(request.params.id)
                     .on(EventName.ERROR, function (err){
-                        reply({code: 500, error: err});
+                        reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
                     .on(EventName.NOT_FOUND, function (result){
-                        reply({code: 404, data: null});
+                        reply({statusCode: 404, data: null});
                     })
             }
         }
@@ -135,13 +135,13 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.getRoomsByCriteria(request.params.location, request.query)
                     .on(EventName.ERROR, function (err){
-                        reply({code: 500, error: err});
+                        reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
                     .on(EventName.NOT_FOUND, function (result){
-                        reply({code: 404, data: []});
+                        reply({statusCode: 404, data: []});
                     })
             }
         }

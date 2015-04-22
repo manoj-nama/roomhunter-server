@@ -32,7 +32,6 @@ module.exports.login = function (userCredential) {
     );
 }.toEmitter();
 
-
 module.exports.create = function (user) {
     var emitter = this;
     Model.User.findOne({email: user.email},
@@ -97,7 +96,6 @@ module.exports.update = function (_id, user) {
         });
 }.toEmitter();
 
-
 module.exports.get = function (id) {
     var emitter = this;
     Model.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
@@ -112,7 +110,6 @@ module.exports.get = function (id) {
         }
     });
 }.toEmitter();
-
 
 module.exports.getUserByEmail = function (email) {
     var emitter = this;
@@ -144,7 +141,6 @@ module.exports.delete = function (id) {
     });
 }.toEmitter();
 
-
 module.exports.verifyUser = function (code) {
     var emitter = this;
     var decryptedData = utils.decrypt(code);
@@ -165,6 +161,15 @@ module.exports.verifyUser = function (code) {
         emitter.emit(EventName.NOT_FOUND, null);
 }.toEmitter();
 
+module.exports.sendMessage = function (to, from, message) {
+    var emitter = this;
+    mail.send(to, "New message: RoomHunt", "sendMessage", {
+        toEmail: to,
+        fromEmail: from,
+        message: message
+    });
+    emitter.emit(EventName.DONE, null);
+}.toEmitter();
 
 function getVerificationLink(userId) {
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));

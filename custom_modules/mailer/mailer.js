@@ -12,7 +12,7 @@ exports.send = function(to, subject, templateName, data, from){
     if(templateName){
         _getCompiledTemplate(templateName, data, function(template){
             if(template){
-                _sendMail(from, to, subject, template, data);
+                _sendMail(from, to, subject, template);
             }
         });
     }
@@ -31,7 +31,7 @@ function _getCompiledTemplate(templateName, data, callback){
     });
 }
 
-function _sendMail(from, to, subject, template, data){
+function _sendMail(from, to, subject, template){
     var mailObj = {
         from: from,
         to: to,

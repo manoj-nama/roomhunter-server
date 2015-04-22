@@ -22,10 +22,10 @@ module.exports = [
             handler: function (request, reply){
                 UserService.login(request.payload)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
             }
         }
@@ -48,13 +48,13 @@ module.exports = [
             handler: function (request, reply){
                 UserService.create(request.payload)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
                     .on(EventName.ALREADY_EXIST, function (result){
-                        reply({code : 204, data:null});
+                        reply({statusCode : 204, data:null});
                     })
             }
         }
@@ -74,10 +74,10 @@ module.exports = [
             handler: function (request, reply){
                 UserService.get(request.params.id)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
             }
         }
@@ -115,10 +115,10 @@ module.exports = [
             handler: function (request, reply){
                 UserService.update(request.params.id, request.payload)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
             }
         }
@@ -138,13 +138,13 @@ module.exports = [
             handler: function (request, reply){
                 UserService.delete(request.params.id)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
                     .on(EventName.NOT_FOUND, function (result){
-                        reply({code : 404, data:null});
+                        reply({statusCode : 404, data:null});
                     })
             }
         }
@@ -164,10 +164,10 @@ module.exports = [
             handler: function (request, reply){
                 RoomService.getRoomsByUserId(request.params.userId)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
             }
         }
@@ -187,13 +187,37 @@ module.exports = [
             handler: function (request, reply){
                 UserService.verifyUser(request.params.userId)
                     .on(EventName.ERROR, function (err){
-                        reply({code : 500, error:err});
+                        reply({statusCode : 500, error:err});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({code : 200, data:JSON.stringify(result)});
+                        reply({statusCode : 200, data:JSON.stringify(result)});
                     })
                     .on(EventName.NOT_FOUND, function (result){
-                        reply({code : 404, data: null});
+                        reply({statusCode : 404, data: null});
+                    })
+            }
+        }
+    },
+    {
+        path: '/api/user/send/message',
+        method: 'POST',
+        config: {
+            description: 'REST API to send message to a user',
+            tags: ['api'],
+            validate: {
+                payload: {
+                    to: Joi.string().required(),
+                    from: Joi.string().required(),
+                    message: Joi.string().optional()
+                }
+            },
+            handler: function (request, reply){
+                UserService.sendMessage(request.payload.to,request.payload.from,request.payload.message)
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode : 500, error:err});
+                    })
+                    .on(EventName.DONE, function (result){
+                        reply({statusCode : 200, data: null});
                     })
             }
         }
