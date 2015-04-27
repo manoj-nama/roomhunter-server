@@ -10,23 +10,30 @@ module.exports.login = function (userCredential) {
     Model.User.findOne({
             'email': userCredential.email
         }, function (err, userObj) {
-            if (userObj.email) {
-                var token = jwt.sign({password: userObj.password, email: userObj.email}, 'shalalaldkdkd');
-                Model.User.update({'email': userObj.email}, {$set: {loginToken: token}}, function (err, tokenUpdated) {
-                    if (err) {
-                        emitter.emit(EventName.ERROR, "ERROR");
-                    } else if (tokenUpdated) {
-                        emitter.emit(EventName.DONE, {
-                            firstName: userObj.firstName,
-                            lastName: userObj.lastName,
-                            email: userObj.email
+            if (userObj && userObj.email) {
+                bcrypt.compare(userCredential.password, userObj.password, function (err, res) {
+                    if (res == true) {
+                        userObj.password = null;
+                        var token = jwt.sign({password: userObj.password, email: userObj.email}, "h(3#");
+                        Model.User.update({'email': userObj.email}, {$set: {loginToken: token}}, function (err, tokenUpdated) {
+                            if (err) {
+                                emitter.emit(EventName.ERROR, "ERROR");
+                            } else if (tokenUpdated) {
+                                emitter.emit(EventName.DONE, {
+                                    firstName: userObj.firstName,
+                                    lastName: userObj.lastName,
+                                    loginToken: token
+                                });
+                            } else {
+                                emitter.emit(EventName.ERROR, "loginToken not created");
+                            }
                         });
                     } else {
-                        emitter.emit(EventName.ERROR, "ERROR");
+                        emitter.emit(EventName.ERROR, "Invalid Password");
                     }
                 });
             } else {
-                emitter.emit(EventName.ERROR, "ERROR");
+                emitter.emit(EventName.ERROR, "Email Id not found");
             }
         }
     );
@@ -98,11 +105,14 @@ module.exports.update = function (_id, user) {
 
 module.exports.get = function (id) {
     var emitter = this;
-    Model.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
+    console.log(id)
+    Model.User.findOne({email: id}, function (err, user) {
+        console.log(user, err);
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
         else if (user) {
+
             emitter.emit(EventName.DONE, user);
         }
         else {
