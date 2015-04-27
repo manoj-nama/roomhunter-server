@@ -24,6 +24,7 @@
       "port": 17203,
       "password": "******"
     }
+
   },
   "development": {
     "server": {
@@ -49,6 +50,9 @@
       "host": "enter-your-redis-host-name",
       "port": 17203,
       "password": "****"
+    },
+    "google" : {
+      "apiKey" : "AIzaSyALe0pfg_5BymlhSXAeBtXWQCqKd5_6p7w"
     }
   },
   "staging": {

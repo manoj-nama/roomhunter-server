@@ -1,7 +1,7 @@
 "use strict";
 
 var Joi = require('joi'),
-    redis = require('../custom_modules/custom_redis');
+    req = require('request');
 //Routs Lists
 //Refer: http://hapijs.com/tutorials/routing
 module.exports = [
@@ -9,8 +9,27 @@ module.exports = [
         method: 'GET',
         path: '/',
         config: {
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 reply('Welcome to Hapi Mongoose Boilerplate');
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/api/location/{text}',
+        config: {
+            validate: {
+                params: {
+                    text: Joi.string().required()
+                }
+            },
+            handler: function (request, reply){
+                req.get('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + request.params.text + '&types=geocode&key=' + _config.google.apiKey, function (err, resp, body){
+                    if (err)
+                        reply({statusCode: 500, error: err});
+                    else
+                        reply({statusCode: 200, data :JSON.parse(body).predictions});
+                })
             }
         }
     }
