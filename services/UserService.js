@@ -22,7 +22,8 @@ module.exports.login = function (userCredential) {
                                 emitter.emit(EventName.DONE, {
                                     firstName: userObj.firstName,
                                     lastName: userObj.lastName,
-                                    loginToken: token
+                                    loginToken: token,
+                                    userId: userObj._id
                                 });
                             } else {
                                 emitter.emit(EventName.ERROR, "loginToken not created");
@@ -103,16 +104,14 @@ module.exports.update = function (_id, user) {
         });
 }.toEmitter();
 
+
 module.exports.get = function (id) {
     var emitter = this;
-    console.log(id)
-    Model.User.findOne({email: id}, function (err, user) {
-        console.log(user, err);
+    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
         else if (user) {
-
             emitter.emit(EventName.DONE, user);
         }
         else {
