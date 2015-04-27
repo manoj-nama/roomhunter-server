@@ -152,7 +152,7 @@ module.exports.delete = function (id) {
 
 module.exports.verifyUser = function (code) {
     var emitter = this;
-    var decryptedData = utils.decrypt(code);
+    var decryptedData = JSON.parse(utils.decrypt(code));
     if (decryptedData.userId) {
         Model.User.findOneAndUpdate({_id: mongoose.Types.ObjectId(decryptedData.userId)}, {$set: {verified: true}}, {new: true}, function (err, user) {
             if (err) {
