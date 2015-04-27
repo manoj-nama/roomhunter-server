@@ -19,13 +19,13 @@ module.exports = [
                     password: Joi.string().required()
                 }
             },
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.login(request.payload)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result});
                     })
             }
         }
@@ -45,16 +45,16 @@ module.exports = [
                     mobile: Joi.number().optional()
                 }
             },
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.create(request.payload)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result});
                     })
-                    .on(EventName.ALREADY_EXIST, function (result){
-                        reply({statusCode : 204, data:null});
+                    .on(EventName.ALREADY_EXIST, function (result) {
+                        reply({statusCode: 204, data: null});
                     })
             }
         }
@@ -65,19 +65,20 @@ module.exports = [
         config: {
             description: 'REST API to get a user by given _id',
             tags: ['api'],
+            auth: 'simple',
             validate: {
                 params: {
-                    id: Joi.string().required()
+                    id: Joi.string().required(),
+                    loginToken: Joi.string()
                 }
             },
-            auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.get(request.params.id)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result});
                     })
             }
         }
@@ -88,7 +89,8 @@ module.exports = [
         config: {
             description: 'REST API for logging out a user',
             tags: ['api'],
-            handler: function (request, reply){
+            handler: function (request, reply) {
+                console.log(request);
                 request.auth = null;
                 reply(true);
             }
@@ -112,13 +114,13 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.update(request.params.id, request.payload)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -135,16 +137,16 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.delete(request.params.id)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
-                    .on(EventName.NOT_FOUND, function (result){
-                        reply({statusCode : 404, data:null});
+                    .on(EventName.NOT_FOUND, function (result) {
+                        reply({statusCode: 404, data: null});
                     })
             }
         }
@@ -161,13 +163,13 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.getRoomsByUserId(request.params.userId)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
         }
@@ -184,16 +186,16 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 UserService.verifyUser(request.params.userId)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data:JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: JSON.stringify(result)});
                     })
-                    .on(EventName.NOT_FOUND, function (result){
-                        reply({statusCode : 404, data: null});
+                    .on(EventName.NOT_FOUND, function (result) {
+                        reply({statusCode: 404, data: null});
                     })
             }
         }
@@ -211,13 +213,13 @@ module.exports = [
                     message: Joi.string().optional()
                 }
             },
-            handler: function (request, reply){
-                UserService.sendMessage(request.payload.to,request.payload.from,request.payload.message)
-                    .on(EventName.ERROR, function (err){
-                        reply({statusCode : 500, error:err});
+            handler: function (request, reply) {
+                UserService.sendMessage(request.payload.to, request.payload.from, request.payload.message)
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode : 200, data: null});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: null});
                     })
             }
         }
