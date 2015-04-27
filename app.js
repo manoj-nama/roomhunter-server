@@ -105,7 +105,7 @@ task.push(function (callback){
                     allowQueryToken: true,
                     allowMultipleHeaders: false,
                     accessTokenName: 'loginToken',
-                    validateFunc: function (token, callback) {
+                    validateFunc: function (loginToken, callback) {
                         var request = this;
                         Model.User.findOne({loginToken: loginToken}, function (err, result) {
                             if (result) {
