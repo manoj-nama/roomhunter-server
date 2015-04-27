@@ -107,7 +107,7 @@ module.exports.update = function (_id, user) {
 
 module.exports.get = function (id) {
     var emitter = this;
-    Modal.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
+    Model.User.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, user) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
