@@ -97,24 +97,24 @@ task.push(function (callback) {
             var UserService = require('./services/UserService');
             server.register(Basic, function (err) {
                 server.auth.strategy('simple', 'bearer-access-token', {
-                    allowQueryToken: true,              // optional, true by default
-                    allowMultipleHeaders: false,        // optional, false by default
-                    accessTokenName: 'access_token',    // optional, 'access_token' by default
+                    allowQueryToken: true,
+                    allowMultipleHeaders: false,
+                    accessTokenName: 'loginToken',
                     validateFunc: function (token, callback) {
                         var request = this;
-                        Model.User.findOne({loginToken: token}, function (err, result) {
+                        Model.User.findOne({loginToken: loginToken}, function (err, result) {
                             if (result) {
-                                callback(null, true, {token: token})
+                                callback(null, true, {loginToken: loginToken});
                             } else {
-                                callback(null, false, {token: token})
+                                callback(null, false, {loginToken: loginToken});
                             }
                         });
                     }
                 });
-                callback(err, msg)
+                callback(err, msg);
             });
         } else {
-            msg = 'hapi-auth-basic Disable';
+            msg = 'hapi-auth-bearer-token Disable';
             callback(null, msg);
         }
     });
