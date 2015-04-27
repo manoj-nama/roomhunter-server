@@ -90,7 +90,6 @@ module.exports = [
             description: 'REST API for logging out a user',
             tags: ['api'],
             handler: function (request, reply) {
-                console.log(request);
                 request.auth = null;
                 reply(true);
             }
