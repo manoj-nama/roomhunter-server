@@ -182,7 +182,7 @@ module.exports.sendMessage = function (to, from, message) {
 
 function getVerificationLink(userId) {
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
-    var link = _config.server.clientUrl + "/verify/" + encryptedData;
+    var link = _config.server.clientUrl + "/#/verify/" + encryptedData;
     return link;
 }
 

@@ -30,6 +30,7 @@
       "host": "localhost",
       "port": "7002",
       "serverUrl" : "localhost:7002",
+      "clientUrl" : "localhost:8000",
       "allowCrossDomain": true
     },
     "database": {
