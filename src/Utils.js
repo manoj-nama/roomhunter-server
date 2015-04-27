@@ -5,16 +5,28 @@ var crypto = require('crypto'),
 
 exports.encrypt = function (text){
     var cipher = crypto.createCipher(algorithm, password);
-    var crypted = cipher.update(text, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-    return crypted;
+    try{
+        var crypted = cipher.update(text, 'utf8', 'hex');
+        crypted += cipher.final('hex');
+        return crypted;
+    }
+    catch(e){
+        return null;
+    }
+
 };
 
 exports.decrypt = function (text){
     var decipher = crypto.createDecipher(algorithm, password);
-    var dec = decipher.update(text, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
+    try{
+        var dec = decipher.update(text, 'hex', 'utf8');
+        dec += decipher.final('utf8');
+        return dec;
+    }
+    catch(e){
+        return null;
+    }
+
 };
 
 exports.parseFilterUrl = function (filters){
