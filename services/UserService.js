@@ -209,6 +209,19 @@ module.exports.shortlistRoom = function (userId, roomId){
         });
 }.toEmitter();
 
+module.exports.removeFromshortlisted = function (userId, roomId){
+    var emitter = this;
+    Model.User.update({_id: userId},{$pull: {"shortlisted" : roomId }},
+        function (err, numberAffected){
+            if (err) {
+                emitter.emit(EventName.ERROR, err);
+            }
+            else {
+                emitter.emit(EventName.DONE, true);
+            }
+        });
+}.toEmitter();
+
 function getVerificationLink(userId){
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
     var link = _config.server.clientUrl + "/#/verify/" + encryptedData;

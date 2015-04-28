@@ -169,5 +169,29 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/room/shortlist/remove/{userId}/{roomId}',
+        method: "GET",
+        config: {
+            description: 'REST API to remove a room from shortlisted rooms of a user',
+            tags: ['api'],
+            validate: {
+                params: {
+                    userId: Joi.string().required(),
+                    roomId: Joi.string().required()
+                }
+            },
+            auth: 'simple',
+            handler: function (request, reply){
+                UserService.removeFromshortlisted(request.params.userId,request.params.roomId)
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err});
+                    })
+                    .on(EventName.DONE, function (result){
+                        reply({statusCode: 200, data: result});
+                    })
+            }
+        }
     }
 ];
