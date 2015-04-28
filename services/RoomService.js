@@ -52,7 +52,6 @@ module.exports.update = function (_id, room){
         });
 }.toEmitter();
 
-
 module.exports.delete = function (id){
     var emitter = this;
     Model.Room.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result){
@@ -101,3 +100,4 @@ module.exports.getRoomsByCriteria = function (location, filters){
         }
     });
 }.toEmitter();
+
