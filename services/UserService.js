@@ -104,6 +104,19 @@ module.exports.update = function (_id, user) {
         });
 }.toEmitter();
 
+module.exports.logout = function (_id) {
+    var emitter = this;
+    Model.User.findOneAndUpdate({_id: _id},{$unset : {loginToken: 1}},
+        function (err, numberAffected, raw) {
+            if (err) {
+                log.error("ERROR: ", err);
+                emitter.emit(EventName.ERROR, err);
+            }
+            else if (raw) {
+                emitter.emit(EventName.DONE, true);
+            }
+        });
+}.toEmitter();
 
 module.exports.get = function (id) {
     var emitter = this;
