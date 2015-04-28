@@ -112,9 +112,8 @@ module.exports.logout = function (_id) {
                 log.error("ERROR: ", err);
                 emitter.emit(EventName.ERROR, err);
             }
-            else if (raw) {
+            else
                 emitter.emit(EventName.DONE, true);
-            }
         });
 }.toEmitter();
 
