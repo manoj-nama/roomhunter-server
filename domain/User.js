@@ -24,6 +24,7 @@ module.exports = {
         profileImage: String
     },
     posts: [],
+    shortlisted : [],
     isActive: Boolean,
     verified: Boolean,
     timestamp: {type: Number, default: +new Date()},

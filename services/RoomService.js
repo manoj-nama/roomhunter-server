@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 var utils = require('../src/Utils');
 
 module.exports.create = function (room) {
-    console.log("===========rooooom====== %j", room);
     var emitter = this;
     room.isActive = true;
     new Model.Room(room).save(function (err, result) {
@@ -53,8 +52,7 @@ module.exports.update = function (_id, room) {
         });
 }.toEmitter();
 
-
-module.exports.delete = function (id) {
+module.exports.delete = function (id){
     var emitter = this;
     Model.Room.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
         if (err) {
@@ -102,3 +100,4 @@ module.exports.getRoomsByCriteria = function (location, filters) {
         }
     });
 }.toEmitter();
+
