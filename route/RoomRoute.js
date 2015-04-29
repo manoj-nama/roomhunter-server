@@ -20,19 +20,18 @@ module.exports = [
                     price: Joi.string().required(),
                     propertyType: Joi.string().required(),
                     isFurnished: Joi.string().required(),
-                    location_seoFriendlyUrl: Joi.string().required(),
                     description: Joi.string().optional(),
-                    location_name: Joi.string().optional(),
+                    location: Joi.object(),
                     images: Joi.string().optional()
                 }
             },
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.create(request.payload)
-                    .on(EventName.ERROR, function (err){
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
-                        reply({statusCode: 200, data: JSON.stringify(result)});
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result});
                     })
             }
         }
@@ -49,12 +48,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.get(request.params.id)
-                    .on(EventName.ERROR, function (err){
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
@@ -83,12 +82,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.update(request.params.id, request.payload)
-                    .on(EventName.ERROR, function (err){
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
@@ -106,15 +105,15 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.delete(request.params.id)
-                    .on(EventName.ERROR, function (err){
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
-                    .on(EventName.NOT_FOUND, function (result){
+                    .on(EventName.NOT_FOUND, function (result) {
                         reply({statusCode: 404, data: null});
                     })
             }
@@ -131,15 +130,15 @@ module.exports = [
                     location: Joi.string().required()
                 }
             },
-            handler: function (request, reply){
+            handler: function (request, reply) {
                 RoomService.getRoomsByCriteria(request.params.location, request.query)
-                    .on(EventName.ERROR, function (err){
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
-                    .on(EventName.NOT_FOUND, function (result){
+                    .on(EventName.NOT_FOUND, function (result) {
                         reply({statusCode: 404, data: []});
                     })
             }
