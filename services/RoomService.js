@@ -2,10 +2,11 @@ var EventName = require('../src/enum/EventName');
 var mongoose = require('mongoose');
 var utils = require('../src/Utils');
 
-module.exports.create = function (room){
+module.exports.create = function (room) {
+    console.log("===========rooooom====== %j", room);
     var emitter = this;
     room.isActive = true;
-    new Model.Room(room).save(function (err, result){
+    new Model.Room(room).save(function (err, result) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -16,9 +17,9 @@ module.exports.create = function (room){
 }.toEmitter();
 
 
-module.exports.get = function (id){
+module.exports.get = function (id) {
     var emitter = this;
-    Model.Room.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, room){
+    Model.Room.findOne({_id: mongoose.Types.ObjectId(id)}, function (err, room) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -31,16 +32,16 @@ module.exports.get = function (id){
     });
 }.toEmitter();
 
-module.exports.update = function (_id, room){
+module.exports.update = function (_id, room) {
     var emitter = this;
     Model.Room.findOne({_id: _id},
-        function (err, result){
+        function (err, result) {
             if (err) {
                 log.error("ERROR: ", err);
                 emitter.emit(EventName.ERROR, err);
             }
             else if (result) {
-                Model.Room.update({_id: mongoose.Types.ObjectId(_id)}, {$set: room}, {}, function (err, result){
+                Model.Room.update({_id: mongoose.Types.ObjectId(_id)}, {$set: room}, {}, function (err, result) {
                     if (err) {
                         emitter.emit(EventName.ERROR, err);
                     }
@@ -53,9 +54,9 @@ module.exports.update = function (_id, room){
 }.toEmitter();
 
 
-module.exports.delete = function (id){
+module.exports.delete = function (id) {
     var emitter = this;
-    Model.Room.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result){
+    Model.Room.remove({_id: mongoose.Types.ObjectId(id)}, function (err, result) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -68,9 +69,9 @@ module.exports.delete = function (id){
     });
 }.toEmitter();
 
-module.exports.getRoomsByUserId = function (userId){
+module.exports.getRoomsByUserId = function (userId) {
     var emitter = this;
-    Model.Room.find({userId: userId}, function (err, rooms){
+    Model.Room.find({userId: userId}, function (err, rooms) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
@@ -85,11 +86,11 @@ module.exports.getRoomsByUserId = function (userId){
 
 //Todo apply paginated response for lazy loading
 
-module.exports.getRoomsByCriteria = function (location, filters){
+module.exports.getRoomsByCriteria = function (location, filters) {
     var emitter = this;
     var criteria = utils.parseFilterUrl(filters);
     criteria['location.seoFriendlyUrl'] = location;
-    Model.Room.find(criteria, function (err, rooms){
+    Model.Room.find(criteria, function (err, rooms) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }

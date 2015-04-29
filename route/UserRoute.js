@@ -84,14 +84,20 @@ module.exports = [
         }
     },
     {
-        path: '/api/user/logout',
+        path: '/api/user/logout/{id}',
         method: 'GET',
         config: {
             description: 'REST API for logging out a user',
             tags: ['api'],
+            auth: 'simple',
             handler: function (request, reply) {
-                request.auth = null;
-                reply(true);
+                UserService.logout(request.params.id)
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err});
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result});
+                    })
             }
         }
     },
