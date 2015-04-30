@@ -225,6 +225,7 @@ module.exports.removeFromshortlisted = function (userId, roomId){
 function getVerificationLink(userId){
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
     var link = _config.server.clientUrl + "/#/verify/" + encryptedData;
+    console.log( _config.server.clientUrl + "/#/verify/" + encryptedData);
     return link;
 }
 
