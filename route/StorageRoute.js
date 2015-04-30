@@ -32,6 +32,15 @@ module.exports = [
     {
         method: 'GET',
         path: '/uploads/{name}',
+        config: {
+            description: 'REST API to get  given file by name',
+            tags: ['api'],
+            validate: {
+                params: {
+                    name: Joi.string().required()
+                }
+            }
+        },
         handler: function (request, reply){
             reply.file(request.params.name);
         }
