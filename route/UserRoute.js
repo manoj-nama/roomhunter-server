@@ -42,7 +42,9 @@ module.exports = [
                     password: Joi.string().required(),
                     firstName: Joi.string().optional(),
                     lastName: Joi.string().optional(),
-                    mobile: Joi.number().optional()
+                    personalDetails:Joi.object().keys({
+                        phone: Joi.number().optional()
+                    })
                 }
             },
             handler: function (request, reply) {
@@ -112,7 +114,9 @@ module.exports = [
                     email: Joi.string().optional(),
                     firstName: Joi.string().optional(),
                     lastName: Joi.string().optional(),
-                    mobile: Joi.number().optional()
+                    personalDetails:Joi.object().keys({
+                        phone: Joi.number().optional()
+                    })
                 },
                 params: {
                     id: Joi.string().required()
