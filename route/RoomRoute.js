@@ -23,7 +23,7 @@ module.exports = [
                     isFurnished: Joi.string().required(),
                     description: Joi.string().optional(),
                     location: Joi.object(),
-                    images: Joi.string().optional()
+                    images: Joi.array().optional()
                 }
             },
             handler: function (request, reply) {
@@ -76,7 +76,7 @@ module.exports = [
                     location_seoFriendlyUrl: Joi.string().required(),
                     description: Joi.string().optional(),
                     location_name: Joi.string().optional(),
-                    images: Joi.string().optional()
+                    images: Joi.array().optional()
                 },
                 params: {
                     id: Joi.string().required()
@@ -158,12 +158,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
-                UserService.shortlistRoom(request.params.userId,request.params.roomId)
-                    .on(EventName.ERROR, function (err){
+            handler: function (request, reply) {
+                UserService.shortlistRoom(request.params.userId, request.params.roomId)
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: result});
                     })
             }
@@ -182,12 +182,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply){
-                UserService.removeFromshortlisted(request.params.userId,request.params.roomId)
-                    .on(EventName.ERROR, function (err){
+            handler: function (request, reply) {
+                UserService.removeFromshortlisted(request.params.userId, request.params.roomId)
+                    .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result){
+                    .on(EventName.DONE, function (result) {
                         reply({statusCode: 200, data: result});
                     })
             }
