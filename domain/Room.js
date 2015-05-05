@@ -16,7 +16,7 @@ module.exports = {
         code: String,
         longitude: String,
         latitude: String,
-        seoFriendlyUrl: String
+        seoFriendlyName: String
     },
     description: String,
     price: Number,

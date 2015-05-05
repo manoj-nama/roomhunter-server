@@ -73,7 +73,7 @@ module.exports = [
                     price: Joi.string().required(),
                     propertyType: Joi.string().required(),
                     isFurnished: Joi.string().required(),
-                    location_seoFriendlyUrl: Joi.string().required(),
+                    location_seoFriendlyName: Joi.string().required(),
                     description: Joi.string().optional(),
                     location_name: Joi.string().optional(),
                     images: Joi.string().optional()
