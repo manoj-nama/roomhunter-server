@@ -87,7 +87,7 @@ module.exports.getRoomsByUserId = function (userId) {
 module.exports.getRoomsByCriteria = function (location, filters) {
     var emitter = this;
     var criteria = utils.parseFilterUrl(filters);
-    criteria['location.seoFriendlyUrl'] = location;
+    criteria['location.seoFriendlyName'] = location;
     Model.Room.find(criteria, function (err, rooms) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
