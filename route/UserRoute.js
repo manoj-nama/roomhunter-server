@@ -198,13 +198,13 @@ module.exports = [
             handler: function (request, reply) {
                 UserService.verifyUser(request.params.code)
                     .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result});
+                        reply({statusCode: 200, data: result, message:"Account verified successfully. Please proceed to login."});
                     })
                     .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: null});
+                        reply({statusCode: 404, data: null, message:"Invalid link. Please try with correct link."});
                     })
             }
         }
