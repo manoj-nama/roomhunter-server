@@ -22,10 +22,10 @@ module.exports = [
             handler: function (request, reply) {
                 UserService.login(request.payload)
                     .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message: "Invalid login credentials. Please try again."});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result});
+                        reply({statusCode: 200, data: result, message : "Login successful."});
                     })
             }
         }
@@ -50,13 +50,13 @@ module.exports = [
             handler: function (request, reply) {
                 UserService.create(request.payload)
                     .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message : "Error occurred. Please try again later."});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result});
+                        reply({statusCode: 200, data: result, message: "Account created successfully. A link has been sent to your email Id. Click on it to activate your account."});
                     })
                     .on(EventName.ALREADY_EXIST, function (result) {
-                        reply({statusCode: 204, data: null});
+                        reply({statusCode: 204, data: null, message: "Email Id already exist. Please try with another email."});
                     })
             }
         }
@@ -126,10 +126,10 @@ module.exports = [
             handler: function (request, reply) {
                 UserService.update(request.params.id, request.payload)
                     .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message : "Error updating profile."});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: JSON.stringify(result), message : "Profile updated successfully."});
                     })
             }
         }
