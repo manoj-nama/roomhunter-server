@@ -21,10 +21,10 @@ module.exports = [
             handler: function (request, reply){
                 StorageService.upload(request.payload.file)
                     .on(EventName.ERROR, function (err){
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message :"Error upload file."});
                     })
                     .on(EventName.DONE, function (result){
-                        reply({statusCode: 200, data: result});
+                        reply({statusCode: 200, data: result, message : "file uploaded successfully."});
                     })
             }
         }
