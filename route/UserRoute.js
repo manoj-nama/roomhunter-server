@@ -110,15 +110,6 @@ module.exports = [
             description: 'REST API to update an existing user',
             tags: ['api'],
             validate: {
-                payload: {
-                    email: Joi.string().optional(),
-                    firstName: Joi.string().optional(),
-                    lastName: Joi.string().optional(),
-                    personalDetails:Joi.object().keys({
-                        phone: Joi.number().optional(),
-                        profileImage: Joi.string().optional()
-                    })
-                },
                 params: {
                     id: Joi.string().required()
                 }
