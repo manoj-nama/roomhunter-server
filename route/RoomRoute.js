@@ -48,14 +48,13 @@ module.exports = [
                     id: Joi.string().required()
                 }
             },
-            auth: 'simple',
             handler: function (request, reply) {
                 RoomService.get(request.params.id)
                     .on(EventName.ERROR, function (err) {
                         reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: result});
                     })
             }
         }

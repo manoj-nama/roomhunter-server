@@ -22,7 +22,7 @@ module.exports.get = function (id) {
         if (err) {
             emitter.emit(EventName.ERROR, err);
         }
-        else if (user) {
+        else if (room) {
             emitter.emit(EventName.DONE, room);
         }
         else {
