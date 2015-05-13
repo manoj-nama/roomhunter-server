@@ -1,0 +1,4 @@
+{
+    "name":"bufferUtils",
+    "main":"./lib/buffered-utils.js"
+}
