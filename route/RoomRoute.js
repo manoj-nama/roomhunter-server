@@ -137,7 +137,7 @@ module.exports = [
                         reply({statusCode: 500, error: err});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: JSON.stringify(result)});
+                        reply({statusCode: 200, data: result});
                     })
                     .on(EventName.NOT_FOUND, function (result) {
                         reply({statusCode: 404, data: []});
