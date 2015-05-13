@@ -29,10 +29,10 @@ module.exports = [
             handler: function (request, reply) {
                 RoomService.create(request.payload)
                     .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+                        reply({statusCode: 500, error: err, message : "Error occurred. Please try again later."});
                     })
                     .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result});
+                        reply({statusCode: 200, data: result, message: "Room posted successfully."});
                     })
             }
         }
