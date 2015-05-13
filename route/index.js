@@ -1,7 +1,8 @@
 "use strict";
 
 var Joi = require('joi'),
-    req = require('request');
+    req = require('request'),
+    geoCity = require('../src/geoName1000City');
 //Routs Lists
 //Refer: http://hapijs.com/tutorials/routing
 module.exports = [
@@ -30,6 +31,18 @@ module.exports = [
                     else
                         reply({statusCode: 200, data :JSON.parse(body).predictions});
                 })
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/geocity/import',
+        config: {
+            handler: function (request, reply){
+                geoCity.importGeoCityData(function(response){
+                    console.log("Done migrating geocity data.");
+                });
+                reply('Importing data');
             }
         }
     }
