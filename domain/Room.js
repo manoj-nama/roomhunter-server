@@ -8,7 +8,7 @@ module.exports = {
     title: String,
     userId: String,
     isActive: Boolean,
-    timeStamp: Date,
+    createdAt: Number,
     location: {
         name: String,
         city: String,
