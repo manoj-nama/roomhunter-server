@@ -127,7 +127,7 @@ module.exports = [
             tags: ['api'],
             validate: {
                 params: {
-                    location: Joi.string().required()
+                    location: Joi.string().optional()
                 }
             },
             handler: function (request, reply) {

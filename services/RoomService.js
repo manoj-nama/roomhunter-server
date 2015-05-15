@@ -87,8 +87,7 @@ module.exports.getRoomsByUserId = function (userId){
 
 module.exports.getRoomsByCriteria = function (location, filters){
     var emitter = this;
-
-    if (location == '') {
+    if (location == ' ') {
         Model.Room.find({}, {}, {sort: {createdAt: -1}}, function (err, rooms){
             if (err) {
                 emitter.emit(EventName.ERROR, err);
