@@ -198,7 +198,7 @@ module.exports.sendMessage = function (to, from, message){
 
 module.exports.shortlistRoom = function (userId, roomId){
     var emitter = this;
-    Model.User.update({_id: userId},{$addToSet: {"shortlisted" : roomId }},
+    Model.User.update({_id: userId}, {$addToSet: {"shortlisted": roomId}},
         function (err, numberAffected){
             if (err) {
                 emitter.emit(EventName.ERROR, err);
@@ -211,7 +211,7 @@ module.exports.shortlistRoom = function (userId, roomId){
 
 module.exports.removeFromshortlisted = function (userId, roomId){
     var emitter = this;
-    Model.User.update({_id: userId},{$pull: {"shortlisted" : roomId }},
+    Model.User.update({_id: userId}, {$pull: {"shortlisted": roomId}},
         function (err, numberAffected){
             if (err) {
                 emitter.emit(EventName.ERROR, err);
@@ -222,10 +222,40 @@ module.exports.removeFromshortlisted = function (userId, roomId){
         });
 }.toEmitter();
 
+module.exports.sendResetPasswordLink = function (email){
+    var emitter = this;
+    Model.User.findOne({email: email},function (err, user){
+        if (err) {
+            emitter.emit(EventName.ERROR, err);
+        }
+        else if (user) {
+            var link = getResetPasswordLink(user._id);
+            mail.send(email, "Reset Your Room-Hunt Password", "resetPassword", {
+                email: email,
+                link: link
+            });
+            emitter.emit(EventName.DONE, email);
+        }
+        else {
+            emitter.emit(EventName.NOT_FOUND, null);
+        }
+    });
+}.toEmitter();
+
+
 function getVerificationLink(userId){
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
     var link = _config.server.clientUrl + "#/verify/" + encryptedData;
-    console.log( _config.server.clientUrl + "#/verify/" + encryptedData);
+    console.log(_config.server.clientUrl + "#/verify/" + encryptedData);
+    return link;
+}
+
+
+
+function getResetPasswordLink(userId){
+    var encryptedData = utils.encrypt(JSON.stringify({userId: userId, timeStamp : +new Date()}));
+    var link = _config.server.clientUrl + "#/reset/password/" + encryptedData;
+    console.log(_config.server.clientUrl + "#/reset/password/" + encryptedData);
     return link;
 }
 

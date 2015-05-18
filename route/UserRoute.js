@@ -223,5 +223,30 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/user/send/link/resetPassword',
+        method: 'POST',
+        config: {
+            description: "API to send a reset password link to a user",
+            tags: ['api'],
+            validate: {
+                payload: {
+                    email: Joi.string().required()
+                }
+            },
+            handler: function (request, reply) {
+                UserService.sendResetPasswordLink(request.payload.email)
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result, message:"Link send successfully."});
+                    })
+                    .on(EventName.NOT_FOUND, function (result) {
+                        reply({statusCode: 404, data: null, message:"User not found."});
+                    })
+            }
+        }
     }
 ];
