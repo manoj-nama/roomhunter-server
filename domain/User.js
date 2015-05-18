@@ -28,5 +28,8 @@ module.exports = {
     isActive: Boolean,
     verified: Boolean,
     timestamp: {type: Number, default: +new Date()},
-    loginToken: {type: String}
+    loginToken: {type: String},
+    lastSearchedLocation : {
+        seoFriendlyName : String
+    }
 };
