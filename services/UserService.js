@@ -242,6 +242,25 @@ module.exports.sendResetPasswordLink = function (email){
     });
 }.toEmitter();
 
+module.exports.verifyResetPasswordLink = function (code){
+    var emitter = this;
+    var decryptedData = JSON.parse(utils.decrypt(code));
+    if (decryptedData && decryptedData.userId) {
+        Model.User.findOne({_id: mongoose.Types.ObjectId(decryptedData.userId)},function (err, user){
+            if (err) {
+                emitter.emit(EventName.ERROR, err);
+            }
+            else if (user) {
+                emitter.emit(EventName.DONE, user._id);
+            }
+            else {
+                emitter.emit(EventName.NOT_FOUND, null);
+            }
+        });
+    }
+    else
+        emitter.emit(EventName.NOT_FOUND, null);
+}.toEmitter();
 
 function getVerificationLink(userId){
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId}));
@@ -249,8 +268,6 @@ function getVerificationLink(userId){
     console.log(_config.server.clientUrl + "#/verify/" + encryptedData);
     return link;
 }
-
-
 
 function getResetPasswordLink(userId){
     var encryptedData = utils.encrypt(JSON.stringify({userId: userId, timeStamp : +new Date()}));

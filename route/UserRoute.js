@@ -248,5 +248,30 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/user/verify/link/resetPassword/{code}',
+        method: 'GET',
+        config: {
+            description: "API to verify a user's reset password link",
+            tags: ['api'],
+            validate: {
+                params: {
+                    code: Joi.string().required()
+                }
+            },
+            handler: function (request, reply) {
+                UserService.verifyResetPasswordLink(request.params.code)
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: result, message:"Valid link."});
+                    })
+                    .on(EventName.NOT_FOUND, function (result) {
+                        reply({statusCode: 404, data: null, message:"Invalid link. Please try with correct link."});
+                    })
+            }
+        }
     }
 ];
