@@ -29,20 +29,29 @@ exports.decrypt = function (text){
 
 };
 
-exports.parseFilterUrl = function (filters){
+exports.parseFilterUrl = function (filters) {
     var criteria = {};
     for (var key in filters) {
         if (filters.hasOwnProperty(key)) {
             switch (key) {
                 case 'price' :
-                    var pricesRange = filters[key].split('_');
-                    criteria['price'] = {'$gte': Number(pricesRange[0]), '$lte': Number(pricesRange[1])};
+                    if (filters[key]) {
+                        var pricesRange = filters[key].split('_');
+                        criteria['price'] = {'$gte': Number(pricesRange[0]), '$lte': Number(pricesRange[1])};
+                    }
                     break;
-                case 'fur' : criteria['isFurnished'] = (filters[key] === "true"); break;
-                case 'type' : criteria['propertyType'] = filters[key]; break;
+                case 'fur' :
+                    if (filters[key]) {
+                        criteria['isFurnished'] = (filters[key] === "true");
+                    }
+                    break;
+                case 'type' :
+                    if (filters[key]) {
+                        criteria['propertyType'] = {$in: filters[key].split('_')};
+                    }
+                    break;
             }
         }
     }
     return criteria;
-
 };
