@@ -273,5 +273,30 @@ module.exports = [
                     })
             }
         }
+    },
+    {
+        path: '/api/user/update/password/{id}',
+        method: 'PUT',
+        config: {
+            description: "REST API to update an user's password",
+            tags: ['api'],
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            },
+            handler: function (request, reply) {
+                UserService.updatePassword(request.params.id, request.payload.password)
+                    .on(EventName.ERROR, function (err) {
+                        reply({statusCode: 500, error: err, message : "Error updating password. Please try again later."});
+                    })
+                    .on(EventName.DONE, function (result) {
+                        reply({statusCode: 200, data: JSON.stringify(result), message : "Password updated successfully. Please proceed to login."});
+                    })
+                    .on(EventName.NOT_FOUND, function (result) {
+                        reply({statusCode: 404, data: null, message:"Not a valid user."});
+                    })
+            }
+        }
     }
 ];
