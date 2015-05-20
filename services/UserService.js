@@ -24,7 +24,8 @@ module.exports.login = function (userCredential){
                                         firstName: userObj.firstName,
                                         lastName: userObj.lastName,
                                         loginToken: token,
-                                        userId: userObj._id
+                                        userId: userObj._id,
+                                        lastSearchedLocation:userObj.lastSearchedLocation
                                     });
                                 } else {
                                     emitter.emit(EventName.ERROR, "loginToken not created");
@@ -128,6 +129,7 @@ module.exports.get = function (id){
             emitter.emit(EventName.ERROR, err);
         }
         else if (user) {
+            console.log('user',user)
             emitter.emit(EventName.DONE, user);
         }
         else {
