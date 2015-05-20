@@ -57,12 +57,12 @@
   },
   "staging": {
     "server": {
-      "host": "localhost",
+      "host": "https://roomhunt-backend.herokuapp.com/",
       "port": "7002",
       "allowCrossDomain": true
     },
     "database": {
-      "url": "mongodb://localhost:27017/roomHunt",
+      "url": "mongodb://heroku_app37035977:81n6g2a9rkba11fefnhm5ii1am@ds033170.mongolab.com:33170/heroku_app37035977/roomHunt",
       "poolSize": 5,
       "tryToConnect": true
     },
