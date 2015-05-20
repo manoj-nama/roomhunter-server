@@ -24,7 +24,8 @@ module.exports.login = function (userCredential){
                                         firstName: userObj.firstName,
                                         lastName: userObj.lastName,
                                         loginToken: token,
-                                        userId: userObj._id
+                                        userId: userObj._id,
+                                        email: userObj.email
                                     });
                                 } else {
                                     emitter.emit(EventName.ERROR, "loginToken not created");
