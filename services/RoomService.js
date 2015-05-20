@@ -87,7 +87,7 @@ module.exports.getRoomsByUserId = function (userId) {
 
 module.exports.getRoomsByCriteria = function (location, filters) {
     var emitter = this;
-    if (location == 'All') {
+    if (location == 'all') {
         var criteria = utils.parseFilterUrl(filters);
         criteria['location.seoFriendlyName'] = {$regex: /.*/};
         Model.Room.find(criteria, {}, {sort: {createdAt: -1}}, function (err, rooms) {
