@@ -9,6 +9,7 @@ module.exports = function (environment, callback) {
     var env = {
         "common": [Test],
         "development": [Test],
+        "staging": [Test],
         "production": [Test]
     };
 
