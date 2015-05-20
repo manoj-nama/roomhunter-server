@@ -25,6 +25,7 @@ module.exports.login = function (userCredential){
                                         lastName: userObj.lastName,
                                         loginToken: token,
                                         userId: userObj._id,
+                                        lastSearchedLocation:userObj.lastSearchedLocation,
                                         email: userObj.email
                                     });
                                 } else {
