@@ -32,6 +32,7 @@ exports.decrypt = function (text){
 exports.parseFilterUrl = function (filters){
     var criteria = {};
     var offset = 0;
+    var sortOptions = {createdAt: -1};
     for (var key in filters) {
         if (filters.hasOwnProperty(key)) {
             switch (key) {
@@ -52,10 +53,19 @@ exports.parseFilterUrl = function (filters){
                     }
                     break;
                 case 'offset' :
-                    offset = filters[key];
+                    if (filters[key]) {
+                        offset = filters[key];
+                    }
+                    break;
+                case 'sort' :
+                    if (filters[key]) {
+                        if (filters[key].split('_')[0] == 'price') {
+                            sortOptions = {price : filters[key].split('_')[1]};
+                        }
+                    }
                     break;
             }
         }
     }
-    return {criteria: criteria, offset: offset};
+    return {criteria: criteria, offset: offset, sortOptions:sortOptions};
 };

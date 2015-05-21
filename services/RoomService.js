@@ -83,12 +83,10 @@ module.exports.getRoomsByUserId = function (userId){
     });
 }.toEmitter();
 
-//Todo apply paginated response for lazy loading
-
 module.exports.getRoomsByCriteria = function (location, filters){
     var emitter = this;
     var criteria = utils.parseFilterUrl(filters).criteria;
-    var sortOptions = {createdAt: -1};
+    var sortOptions = utils.parseFilterUrl(filters).sortOptions;
     var limit = 20;
     var offset = utils.parseFilterUrl(filters).offset || 0;
     if (location != 'all') {
