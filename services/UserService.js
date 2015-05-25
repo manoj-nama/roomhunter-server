@@ -188,13 +188,25 @@ module.exports.verifyUser = function (code){
         emitter.emit(EventName.NOT_FOUND, null);
 }.toEmitter();
 
-module.exports.sendMessage = function (to, from, message){
+module.exports.sendMessage = function (to_id, from, message){
     var emitter = this;
-    mail.send(to, "New message: RoomHunt", "sendMessage", {
-        toEmail: to,
-        fromEmail: from,
-        message: message
+    Model.User.findOne({_id: mongoose.Types.ObjectId(to_id)}, function (err, user){
+        if (err) {
+            emitter.emit(EventName.ERROR, err);
+        }
+        else if (user) {
+            mail.send(user.email, "New message: RoomHunt", "sendMessage", {
+                toEmail: user.email,
+                fromEmail: from,
+                message: message
+            });
+            emitter.emit(EventName.DONE, user);
+        }
+        else {
+            emitter.emit(EventName.ERROR, null);
+        }
     });
+
     emitter.emit(EventName.DONE, null);
 }.toEmitter();
 

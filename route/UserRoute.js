@@ -19,13 +19,13 @@ module.exports = [
                     password: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.login(request.payload)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply({statusCode: 500, error: err, message: "Invalid login credentials. Please try again."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result, message : "Login successful."});
+                    .on(EventName.DONE, function (result){
+                        reply({statusCode: 200, data: result, message: "Login successful."});
                     })
             }
         }
@@ -42,21 +42,29 @@ module.exports = [
                     password: Joi.string().required(),
                     firstName: Joi.string().optional(),
                     lastName: Joi.string().optional(),
-                    personalDetails:Joi.object().keys({
+                    personalDetails: Joi.object().keys({
                         phone: Joi.number().optional()
                     })
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.create(request.payload)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message : "Error occurred. Please try again later."});
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err, message: "Error occurred. Please try again later."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result, message: "Account created successfully. A link has been sent to your email Id. Click on it to activate your account."});
+                    .on(EventName.DONE, function (result){
+                        reply({
+                            statusCode: 200,
+                            data: result,
+                            message: "Account created successfully. A link has been sent to your email Id. Click on it to activate your account."
+                        });
                     })
-                    .on(EventName.ALREADY_EXIST, function (result) {
-                        reply({statusCode: 204, data: null, message: "Email Id already exist. Please try with another email."});
+                    .on(EventName.ALREADY_EXIST, function (result){
+                        reply({
+                            statusCode: 204,
+                            data: null,
+                            message: "Email Id already exist. Please try with another email."
+                        });
                     })
             }
         }
@@ -74,12 +82,12 @@ module.exports = [
                     loginToken: Joi.string()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.get(request.params.id)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply({statusCode: 200, data: result});
                     })
             }
@@ -92,12 +100,12 @@ module.exports = [
             description: 'REST API for logging out a user',
             tags: ['api'],
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.logout(request.params.id)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply({statusCode: 200, data: result});
                     })
             }
@@ -115,13 +123,17 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.update(request.params.id, request.payload)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message : "Error updating profile."});
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err, message: "Error updating profile."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: JSON.stringify(result), message : "Profile updated successfully."});
+                    .on(EventName.DONE, function (result){
+                        reply({
+                            statusCode: 200,
+                            data: JSON.stringify(result),
+                            message: "Profile updated successfully."
+                        });
                     })
             }
         }
@@ -138,15 +150,15 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.delete(request.params.id)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
-                    .on(EventName.NOT_FOUND, function (result) {
+                    .on(EventName.NOT_FOUND, function (result){
                         reply({statusCode: 404, data: null});
                     })
             }
@@ -164,12 +176,12 @@ module.exports = [
                 }
             },
             auth: 'simple',
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 RoomService.getRoomsByUserId(request.params.userId)
-                    .on(EventName.ERROR, function (err) {
+                    .on(EventName.ERROR, function (err){
                         reply({statusCode: 500, error: err});
                     })
-                    .on(EventName.DONE, function (result) {
+                    .on(EventName.DONE, function (result){
                         reply({statusCode: 200, data: JSON.stringify(result)});
                     })
             }
@@ -186,16 +198,20 @@ module.exports = [
                     code: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.verifyUser(request.params.code)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err, message: "Error occurred. Please try again later."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result, message:"Account verified successfully. Please proceed to login."});
+                    .on(EventName.DONE, function (result){
+                        reply({
+                            statusCode: 200,
+                            data: result,
+                            message: "Account verified successfully. Please proceed to login."
+                        });
                     })
-                    .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: null, message:"Invalid link. Please try with correct link."});
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({statusCode: 404, data: null, message: "Invalid link. Please try with correct link."});
                     })
             }
         }
@@ -208,18 +224,26 @@ module.exports = [
             tags: ['api'],
             validate: {
                 payload: {
-                    to: Joi.string().required(),
+                    to_id: Joi.string().required(),
                     from: Joi.string().required(),
                     message: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
-                UserService.sendMessage(request.payload.to, request.payload.from, request.payload.message)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err});
+            handler: function (request, reply){
+                UserService.sendMessage(request.payload.to_id, request.payload.from, request.payload.message)
+                    .on(EventName.ERROR, function (err){
+                        reply({
+                            statusCode: 500,
+                            data: null,
+                            message: "Error sending message. Please try again later."
+                        });
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: null});
+                    .on(EventName.DONE, function (result){
+                        reply({
+                            statusCode: 200,
+                            data: null,
+                            message: "Message sent successfully.Owner will contact you soon."
+                        });
                     })
             }
         }
@@ -235,16 +259,16 @@ module.exports = [
                     email: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.sendResetPasswordLink(request.payload.email)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err, message: "Error occurred. Please try again later."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result, message:"Link send successfully."});
+                    .on(EventName.DONE, function (result){
+                        reply({statusCode: 200, data: result, message: "Link send successfully."});
                     })
-                    .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: null, message:"User not found."});
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({statusCode: 404, data: null, message: "User not found."});
                     })
             }
         }
@@ -260,16 +284,16 @@ module.exports = [
                     code: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.verifyResetPasswordLink(request.params.code)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message:"Error occurred. Please try again later."});
+                    .on(EventName.ERROR, function (err){
+                        reply({statusCode: 500, error: err, message: "Error occurred. Please try again later."});
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: result, message:"Valid link."});
+                    .on(EventName.DONE, function (result){
+                        reply({statusCode: 200, data: result, message: "Valid link."});
                     })
-                    .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: null, message:"Invalid link. Please try with correct link."});
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({statusCode: 404, data: null, message: "Invalid link. Please try with correct link."});
                     })
             }
         }
@@ -285,16 +309,24 @@ module.exports = [
                     id: Joi.string().required()
                 }
             },
-            handler: function (request, reply) {
+            handler: function (request, reply){
                 UserService.updatePassword(request.params.id, request.payload.password)
-                    .on(EventName.ERROR, function (err) {
-                        reply({statusCode: 500, error: err, message : "Error updating password. Please try again later."});
+                    .on(EventName.ERROR, function (err){
+                        reply({
+                            statusCode: 500,
+                            error: err,
+                            message: "Error updating password. Please try again later."
+                        });
                     })
-                    .on(EventName.DONE, function (result) {
-                        reply({statusCode: 200, data: JSON.stringify(result), message : "Password updated successfully. Please proceed to login."});
+                    .on(EventName.DONE, function (result){
+                        reply({
+                            statusCode: 200,
+                            data: JSON.stringify(result),
+                            message: "Password updated successfully. Please proceed to login."
+                        });
                     })
-                    .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: null, message:"Not a valid user."});
+                    .on(EventName.NOT_FOUND, function (result){
+                        reply({statusCode: 404, data: null, message: "Not a valid user."});
                     })
             }
         }
