@@ -139,7 +139,7 @@ module.exports = [
                         reply({statusCode: 200, data: result});
                     })
                     .on(EventName.NOT_FOUND, function (result) {
-                        reply({statusCode: 404, data: []});
+                        reply({statusCode: 404, data: result});
                     })
             }
         }

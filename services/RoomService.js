@@ -92,16 +92,29 @@ module.exports.getRoomsByCriteria = function (location, filters){
     if (location != 'all') {
         criteria['location.seoFriendlyName'] = location;
     }
-    Model.Room.find(criteria, {}, {sort: sortOptions, limit: limit, skip : offset}, function (err, rooms){
-        if (err) {
-            emitter.emit(EventName.ERROR, err);
-        }
-        else if (rooms) {
-            emitter.emit(EventName.DONE, rooms);
-        }
-        else {
-            emitter.emit(EventName.NOT_FOUND, []);
-        }
+    var min = 0, max = 100000;
+    Model.Room.find(criteria, {price: 1}, {sort: {price: 1}}, function (err, allRooms){
+        if (err)
+            console.log("Error finding range:", err);
+        Model.Room.find(criteria, {}, {sort: sortOptions, limit: limit, skip: offset}, function (err, rooms){
+            if (err) {
+                emitter.emit(EventName.ERROR, err);
+            }
+            else if (rooms) {
+                emitter.emit(EventName.DONE, {
+                    rooms: rooms,
+                    min: allRooms[0].price,
+                    max: allRooms[allRooms.length - 1].price
+                });
+            }
+            else {
+                emitter.emit(EventName.NOT_FOUND, {
+                    rooms: [],
+                    min: min,
+                    max: max
+                });
+            }
+        });
     });
 }.toEmitter();
 
