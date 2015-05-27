@@ -86,14 +86,16 @@ module.exports.getRoomsByUserId = function (userId){
 module.exports.getRoomsByCriteria = function (location, filters){
     var emitter = this;
     var criteria = utils.parseFilterUrl(filters).criteria;
+    var priceRangeCriteria = {};
     var sortOptions = utils.parseFilterUrl(filters).sortOptions;
     var limit = 20;
     var offset = utils.parseFilterUrl(filters).offset || 0;
     if (location != 'all') {
         criteria['location.seoFriendlyName'] = location;
+        priceRangeCriteria['location.seoFriendlyName'] = location;
     }
     var min = 0, max = 100000;
-    Model.Room.find({'location.seoFriendlyName' : location}, {price: 1}, {sort: {price: 1}}, function (err, allRooms){
+    Model.Room.find(priceRangeCriteria, {price: 1}, {sort: {price: 1}}, function (err, allRooms){
         if (err)
             console.log("Error finding range:", err);
         Model.Room.find(criteria, {}, {sort: sortOptions, limit: limit, skip: offset}, function (err, rooms){
