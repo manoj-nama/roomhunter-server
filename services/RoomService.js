@@ -93,7 +93,7 @@ module.exports.getRoomsByCriteria = function (location, filters){
         criteria['location.seoFriendlyName'] = location;
     }
     var min = 0, max = 100000;
-    Model.Room.find(criteria, {price: 1}, {sort: {price: 1}}, function (err, allRooms){
+    Model.Room.find({'location.seoFriendlyName' : location}, {price: 1}, {sort: {price: 1}}, function (err, allRooms){
         if (err)
             console.log("Error finding range:", err);
         Model.Room.find(criteria, {}, {sort: sortOptions, limit: limit, skip: offset}, function (err, rooms){
